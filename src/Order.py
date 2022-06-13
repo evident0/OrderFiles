@@ -53,6 +53,27 @@ def rename_folder(dictionary, parent_dir, current_name, new_name):
     #first pair is the root
     dfs(config,first_pair[0])
 
+def move_folder(dictionary, parent_dir, current_folder, new_parent_directory, new_folder):
+  
+    dictionary[parent_dir].remove([FOLDER,current_folder])
+
+    dictionary[new_parent_directory].append([FOLDER, new_folder]) # add new folder to new parent directory
+  
+    move_dfs(dictionary, parent_dir+"/"+current_folder, new_parent_directory+"/"+new_folder);
+
+    first_pair = next(iter((dictionary.items())))
+    #update extensions
+    #first pair is the root
+    dfs(config,first_pair[0])
+
+def move_dfs(dictionary, current_name,new_name):
+    dictionary[new_name]=dictionary.pop(current_name) # append the poped dictionary to the new name
+
+    for value in dictionary[new_name]:
+        if value[0] == FOLDER:
+            rename_dfs(dictionary, current_name+'/'+value[1], new_name+'/'+value[1])
+            #dictionary[new_name+"/"+value[1]] = dictionary.pop(current_name+"/"+value[1])
+
 #read from json file
 def read_json(file_name):
     with open(file_name, 'r') as f:
@@ -70,6 +91,10 @@ if __name__ == '__main__':
     dfs(config,"Root")
     print(extensions)
 
+    #move_folder(config, "Root", "Documents", "Root/Images", "Documents")
+    #move_folder(config, "Root", "Documents", "Root/Images", "Doc")
+    move_folder(config, "Root/Documents", "WORD", "Root/Documents", "WORUDO")
+    '''
     rename_folder(config, None , "Root", "New Root")
     rename_folder(config, "New Root" ,"Documents", "Doc")
     
@@ -77,7 +102,8 @@ if __name__ == '__main__':
     rename_folder(config, "New Root/Doc" ,"PDF", "pf")
     rename_folder(config, "New Root" ,"Images", "Img")
     print(config)
-    
-    write_json('config.json', config)
-
+    '''
+    #write_json('config.json', config)
+    print(config)
+    print()
     print(extensions)

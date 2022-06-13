@@ -1,62 +1,26 @@
 {
-    "New Root": [
-        [
-            "FOLDER",
-            "Img"
-        ],
-        [
-            "FOLDER",
-            "Doc"
-        ]
+    "Root": [
+        ["FOLDER","Images"],
+        ["FOLDER","Documents"]
     ],
-    "New Root/Doc": [
-        [
-            "FOLDER",
-            "pf"
-        ],
-        [
-            "FOLDER",
-            "DOCX"
-        ],
-        [
-            "FOLDER",
-            "WORD"
-        ]
+    "Root/Images": [
+        ["EXTENSION",".png"],
+        ["EXTENSION",".tiff"],
+        ["EXTENSION",".jpg"]
     ],
-    "New Root/Doc/DOCX": [
-        [
-            "EXTENSION",
-            ".docx"
-        ]
+    "Root/Documents": [
+        ["FOLDER","PDF"],
+        ["FOLDER","DOCX"],
+        ["FOLDER","WORD"]
     ],
-    "New Root/Doc/WORD": [
-        [
-            "EXTENSION",
-            ".doc"
-        ]
+    "Root/Documents/PDF": [
+        ["EXTENSION",".pdf"],
+        ["EXTENSION",".adobe"]
     ],
-    "New Root/Doc/pf": [
-        [
-            "EXTENSION",
-            ".pdf"
-        ],
-        [
-            "EXTENSION",
-            ".adobe"
-        ]
+    "Root/Documents/DOCX": [
+        ["EXTENSION",".docx"]
     ],
-    "New Root/Img": [
-        [
-            "EXTENSION",
-            ".png"
-        ],
-        [
-            "EXTENSION",
-            ".tiff"
-        ],
-        [
-            "EXTENSION",
-            ".jpg"
-        ]
+    "Root/Documents/WORD": [
+        ["EXTENSION",".doc"]
     ]
 }
