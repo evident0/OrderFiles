@@ -1,0 +1,44 @@
+{
+    "Root": [
+        [
+            "FOLDER",
+            "Documents"
+        ]
+    ],
+    "Root/Documents": [
+        [
+            "FOLDER",
+            "PDF"
+        ],
+        [
+            "FOLDER",
+            "DOCX"
+        ],
+        [
+            "FOLDER",
+            "WORD"
+        ]
+    ],
+    "Root/Documents/PDF": [
+        [
+            "EXTENSION",
+            ".pdf"
+        ],
+        [
+            "EXTENSION",
+            ".adobe"
+        ]
+    ],
+    "Root/Documents/DOCX": [
+        [
+            "EXTENSION",
+            ".docx"
+        ]
+    ],
+    "Root/Documents/WORD": [
+        [
+            "EXTENSION",
+            ".doc"
+        ]
+    ]
+}

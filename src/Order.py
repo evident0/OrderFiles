@@ -1,5 +1,6 @@
 import json
 import os
+from turtle import clear
 
 #enum with 3 states
 
@@ -15,6 +16,7 @@ class Rule():
 
 extensions = {}
 def dfs(dictionary, path):
+    extensions.clear()
     dfs_helper(dictionary, path, path) # path differs from operating system to operating system
 
 def dfs_helper(dictionary, os_path, json_path): #starts with, path differs from operating system to operating system
@@ -74,6 +76,23 @@ def move_dfs(dictionary, current_name,new_name):
             rename_dfs(dictionary, current_name+'/'+value[1], new_name+'/'+value[1])
             #dictionary[new_name+"/"+value[1]] = dictionary.pop(current_name+"/"+value[1])
 
+def remove_folder(dictionary, parent_dir, current_folder):
+    dictionary[parent_dir].remove([FOLDER,current_folder])
+    remove_dfs(dictionary, parent_dir+"/"+current_folder)
+
+    first_pair = next(iter((dictionary.items())))
+    #update extensions
+    #first pair is the root
+    dfs(config,first_pair[0])
+
+def remove_dfs(dictionary, current_name):
+   
+    for value in dictionary[current_name]:
+        if value[0] == FOLDER:
+            remove_dfs(dictionary, current_name+'/'+value[1])
+    
+    dictionary.pop(current_name)
+
 #read from json file
 def read_json(file_name):
     with open(file_name, 'r') as f:
@@ -93,7 +112,9 @@ if __name__ == '__main__':
 
     #move_folder(config, "Root", "Documents", "Root/Images", "Documents")
     #move_folder(config, "Root", "Documents", "Root/Images", "Doc")
-    move_folder(config, "Root/Documents", "WORD", "Root/Documents", "WORUDO")
+    #move_folder(config, "Root/Documents", "WORD", "Root/Documents", "WORUDO")
+    move_folder(config, "Root", "Images", "Root/Documents/PDF", "Documento")
+    remove_folder(config, "Root/Documents/PDF", "Documento")
     '''
     rename_folder(config, None , "Root", "New Root")
     rename_folder(config, "New Root" ,"Documents", "Doc")
@@ -103,7 +124,7 @@ if __name__ == '__main__':
     rename_folder(config, "New Root" ,"Images", "Img")
     print(config)
     '''
-    #write_json('config.json', config)
+    write_json('config_output.json', config)
     print(config)
     print()
     print(extensions)
