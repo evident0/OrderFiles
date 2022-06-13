@@ -113,6 +113,14 @@ def read_json(file_name):
 def write_json(file_name, data):
     with open(file_name, 'w') as f:
         json.dump(data, f, indent=4)
+#scan a directory and check the extension of each file
+def scan_directory(directory):
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+           #check if file extension is in the list of extensions
+            if "."+file.split('.')[-1] in extensions:
+                #move file to the folder
+                os.rename(os.path.join(root,file), os.path.join(extensions['.'+file.split('.')[-1]],file))
 
 if __name__ == '__main__':
   
@@ -123,8 +131,9 @@ if __name__ == '__main__':
     #move_folder(config, "Root", "Documents", "Root/Images", "Documents")
     #move_folder(config, "Root", "Documents", "Root/Images", "Doc")
     #move_folder(config, "Root/Documents", "WORD", "Root/Documents", "WORUDO")
-    move_folder(config, "Root", "Images", "Root/Documents/PDF", "Documento")
-    remove_folder(config, "Root/Documents/PDF", "Documento")
+    ##move_folder(config, "Root", "Images", "Root/Documents/PDF", "Documento")
+    ##remove_folder(config, "Root/Documents/PDF", "Documento")
+    move_folder(config, "Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
     '''
     rename_folder(config, None , "Root", "New Root")
     rename_folder(config, "New Root" ,"Documents", "Doc")
@@ -134,6 +143,7 @@ if __name__ == '__main__':
     rename_folder(config, "New Root" ,"Images", "Img")
     print(config)
     '''
+    scan_directory("test")
     write_json('config_output.json', config)
     print(config)
     print()
