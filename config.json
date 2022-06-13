@@ -1,0 +1,62 @@
+{
+    "New Root": [
+        [
+            "FOLDER",
+            "Img"
+        ],
+        [
+            "FOLDER",
+            "Doc"
+        ]
+    ],
+    "New Root/Doc": [
+        [
+            "FOLDER",
+            "pf"
+        ],
+        [
+            "FOLDER",
+            "DOCX"
+        ],
+        [
+            "FOLDER",
+            "WORD"
+        ]
+    ],
+    "New Root/Doc/DOCX": [
+        [
+            "EXTENSION",
+            ".docx"
+        ]
+    ],
+    "New Root/Doc/WORD": [
+        [
+            "EXTENSION",
+            ".doc"
+        ]
+    ],
+    "New Root/Doc/pf": [
+        [
+            "EXTENSION",
+            ".pdf"
+        ],
+        [
+            "EXTENSION",
+            ".adobe"
+        ]
+    ],
+    "New Root/Img": [
+        [
+            "EXTENSION",
+            ".png"
+        ],
+        [
+            "EXTENSION",
+            ".tiff"
+        ],
+        [
+            "EXTENSION",
+            ".jpg"
+        ]
+    ]
+}

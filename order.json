@@ -1,0 +1,11 @@
+{
+    "File1": [
+        "exe",
+        "msi"
+    ],
+    "File2": [
+        "pdf",
+        "doc",
+        "File3"
+    ]
+}
