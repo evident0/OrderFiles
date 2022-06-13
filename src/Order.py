@@ -26,6 +26,9 @@ def dfs_helper(dictionary, os_path, json_path): #starts with, path differs from 
   
     for value in dictionary[json_path]: # dict value is a list of lists [value[0]:type, value[1]:name]
         if value[0] == FOLDER:
+            #create a file if it doesn't exist already
+            if not os.path.exists(os_path+"/"+value[1]):
+                os.makedirs(os.path.join(os_path, value[1]))
             #print ("This"+short_path + '/' + value[1])            
             dfs_helper(dictionary, os.path.join(os_path, value[1]), json_path+'/'+value[1])
         else: # regex or extension
@@ -56,7 +59,10 @@ def rename_folder(dictionary, parent_dir, current_name, new_name):
     dfs(config,first_pair[0])
 
 def move_folder(dictionary, parent_dir, current_folder, new_parent_directory, new_folder):
-  
+
+    # move a folder in the operating system
+    os.rename(os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
+     
     dictionary[parent_dir].remove([FOLDER,current_folder])
 
     dictionary[new_parent_directory].append([FOLDER, new_folder]) # add new folder to new parent directory
@@ -77,6 +83,10 @@ def move_dfs(dictionary, current_name,new_name):
             #dictionary[new_name+"/"+value[1]] = dictionary.pop(current_name+"/"+value[1])
 
 def remove_folder(dictionary, parent_dir, current_folder):
+
+    #remove folder from operating system
+    os.rmdir(os.path.join(parent_dir,current_folder))
+
     dictionary[parent_dir].remove([FOLDER,current_folder])
     remove_dfs(dictionary, parent_dir+"/"+current_folder)
 
