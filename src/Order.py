@@ -1,9 +1,12 @@
+from genericpath import isdir
 import json
 import os
 from turtle import clear
 #import regular expressions
 import re
 #enum with 3 states
+
+from colorama import Fore #for color
 
 EXTENSION = "EXTENSION"
 FOLDER = "FOLDER"
@@ -65,7 +68,26 @@ def rename_folder(dictionary, parent_dir, current_name, new_name):
     #first pair is the root
     dfs(config,first_pair[0])
 
+def colored(r, g, b, text):
+    return "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m".format(r, g, b, text)
+
 def move_folder(dictionary, parent_dir, current_folder, new_parent_directory, new_folder):
+    #check if it is a folder
+    os_parent_dir = os.path.join(*parent_dir.split('/'),current_folder)
+    os_new_parent_dir = os.path.join(*new_parent_directory.split('/'),new_folder)
+
+    print(os_parent_dir)
+    if os.path.isdir(os_parent_dir) is not True or os.path.isdir(os_new_parent_dir) is not True:
+
+        print("ERROR: "+ os.path.join(parent_dir,current_folder)+" is not a folder")
+
+        return
+    #check if new directory is a subdirectory of the parent directory
+    if os.path.commonprefix([os_parent_dir, os_new_parent_dir]) == os_parent_dir:
+        
+        print("ERROR: "+ os_new_parent_dir + " is a subdirectory of " + os_parent_dir)
+
+        return
 
     # move a folder in the operating system
     os.rename(os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
@@ -150,8 +172,9 @@ if __name__ == '__main__':
     #move_folder(config, "Root/Documents", "WORD", "Root/Documents", "WORUDO")
     ##move_folder(config, "Root", "Images", "Root/Documents/PDF", "Documento")
     ##remove_folder(config, "Root/Documents/PDF", "Documento")
-    move_folder(config, "Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
-    
+    #move_folder(config, "Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
+    ##move_folder(config, "Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
+    #move_folder(config, "Root", "Documents", "Root/Documents", "PDF")
     '''
     rename_folder(config, None , "Root", "New Root")
     rename_folder(config, "New Root" ,"Documents", "Doc")
