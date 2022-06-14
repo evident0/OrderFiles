@@ -1,12 +1,13 @@
 import os
 import re
+import shutil
 
 class Scan:
     def __init__(self, extensions, regex):
-        self.extensions = {}
-        self.regex = {}
+        self.extensions = extensions
+        self.regex = regex
         
-    def handle_file_collision(root,file):
+    def handle_file_collision(self,root,file):
         while os.path.isfile(os.path.join(root,file)):
                             #get the file name and extension
             file_name = os.path.splitext(file)[0]
@@ -38,8 +39,10 @@ class Scan:
                         #move file to the folder
                         
                         new_file_name = self.handle_file_collision(self.regex[reg],file)
-                    
-                        os.rename(os.path.join(root,file), os.path.join(self.regex[reg],new_file_name))
+
+                        #This allows to move files between different disk drives
+                        shutil.move(os.path.join(root,file), os.path.join(self.regex[reg],new_file_name))
+                        #os.rename(os.path.join(root,file), os.path.join(self.regex[reg],new_file_name))
                     
                         cont_loop = True
                         break
@@ -49,6 +52,8 @@ class Scan:
                 #check if file extension is in the list of extensions
                 if "."+file.split('.')[-1] in self.extensions:
                     #move file to the folder
-                    new_file_name = self.handle_file_collision(self.extensions['.'+file.split('.')[-1]],file)
+                    new_file_name = self.handle_file_collision(self.extensions['.'+file.split('.')[-1]], file)
 
-                    os.rename(os.path.join(root,file), os.path.join(self.extensions['.'+file.split('.')[-1]],new_file_name))
+                    #This allows to move files between different disk drives
+                    shutil.move(os.path.join(root,file), os.path.join(self.extensions['.'+file.split('.')[-1]], new_file_name))
+                    ##os.rename(os.path.join(root,file), os.path.join(self.extensions['.'+file.split('.')[-1]],new_file_name))

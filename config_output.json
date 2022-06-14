@@ -35,10 +35,6 @@
         [
             "FOLDER",
             "WORD"
-        ],
-        [
-            "FOLDER",
-            "PDF"
         ]
     ],
     "Root/Documents/DOCX": [
@@ -51,9 +47,13 @@
         [
             "EXTENSION",
             ".doc"
+        ],
+        [
+            "FOLDER",
+            "PDFINWORD"
         ]
     ],
-    "Root/Documents/PDF": [
+    "Root/Documents/WORD/PDFINWORD": [
         [
             "EXTENSION",
             ".pdf"

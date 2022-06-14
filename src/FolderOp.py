@@ -5,7 +5,8 @@ import shutil
 #TODO: update entensions and regex with only one dfs (ex. dfs_move)
 class FolderOp:
     #class initilize with regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
-    def __init__(self, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
+    def __init__(self, path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
+        self.path_to_root = path_to_root
         self.regex = regex
         self.config = config
         self.extensions = extensions
@@ -22,17 +23,17 @@ class FolderOp:
         short_path = ""
         short_path = os.path.split(os_path)[-1]
     
-        for value in dictionary[json_path]: # dict value is a list of lists [value[0]:type, value[1]:name]
+        for value in dictionary[json_path]: #  dict value is a list of lists [value[0]:type, value[1]:name]
             if value[0] == self.FOLDER:
                 #create a file if it doesn't exist already
-                if not os.path.exists(os_path+"/"+value[1]):
-                    os.makedirs(os.path.join(os_path, value[1]))
+                if not os.path.exists(os.path.join(self.path_to_root,os_path,value[1])):
+                    os.makedirs(os.path.join(self.path_to_root, os_path, value[1]))
                 #print ("This"+short_path + '/' + value[1])            
                 self.dfs_helper(dictionary, os.path.join(os_path, value[1]), json_path+'/'+value[1])
             elif value[0] == self.EXTENSION: # regex or extension
-                self.extensions[value[1]] = os_path # the path to the folder
+                self.extensions[value[1]] = os.path.join(self.path_to_root,os_path) # the path to the folder
             elif value[0] == self.REGULAR_EXPRESSION:
-                self.regex[value[1]] = os_path # this will be traversed first to match any regex
+                self.regex[value[1]] = os.path.join(self.path_to_root,os_path) # this will be traversed first to match any regex
             else:
                 print("Error: unknown type")
 
@@ -65,8 +66,8 @@ class FolderOp:
 
     def move_folder(self,dictionary, parent_dir, current_folder, new_parent_directory, new_folder):
         #check if it is a folder
-        os_parent_dir = os.path.join(*parent_dir.split('/'),current_folder)
-        os_new_parent_dir = os.path.join(*new_parent_directory.split('/'),new_folder)
+        os_parent_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
+        os_new_parent_dir = os.path.join(self.path_to_root,*new_parent_directory.split('/'),new_folder)
 
         print(os_parent_dir)
         if os.path.isdir(os_parent_dir) is not True or os.path.isdir(os.path.dirname(os_new_parent_dir)) is not True:
@@ -82,7 +83,7 @@ class FolderOp:
             return
 
         # move a folder in the operating system
-        os.rename(os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
+        os.rename(os_parent_dir,os_new_parent_dir)#os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
         
         dictionary[parent_dir].remove([self.FOLDER,current_folder])
 
@@ -106,11 +107,11 @@ class FolderOp:
     def remove_folder(self,dictionary, parent_dir, current_folder):
         #check if it does not exist and return if it does not
         if parent_dir+'/'+current_folder not in dictionary:
-            print("ERROR: "+ os.path.join(parent_dir,current_folder)+" does not exist")
+            print("ERROR: "+ os.path.join(self.path_to_root,parent_dir,current_folder)+" does not exist")
             return
         #remove folder from operating system
         ##os.rmdir(os.path.join(parent_dir,current_folder))
-        shutil.rmtree(os.path.join(parent_dir,current_folder))
+        shutil.rmtree(os.path.join(self.path_to_root,parent_dir,current_folder))
 
         dictionary[parent_dir].remove([self.FOLDER,current_folder])
         self.remove_dfs(dictionary, parent_dir+"/"+current_folder)
@@ -135,8 +136,8 @@ class FolderOp:
             return
 
         #create folder in operating system
-        os_dir = os.path.join(*parent_dir.split('/'),current_folder)
-        os.makedirs(os.path.join(os_dir))
+        os_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
+        os.makedirs(os.path.join(os_dir))#TODO: check if this is necessary
 
         #add the new folder to the parent directory for reference
         dictionary[parent_dir].append([self.FOLDER, current_folder])
