@@ -6,7 +6,8 @@
     "Root/Images": [
         ["EXTENSION",".png"],
         ["EXTENSION",".tiff"],
-        ["EXTENSION",".jpg"]
+        ["EXTENSION",".jpg"],
+        ["REGULAR_EXPRESSION","^The.*Spain"]
     ],
     "Root/Documents": [
         ["FOLDER","PDF"],
@@ -15,7 +16,8 @@
     ],
     "Root/Documents/PDF": [
         ["EXTENSION",".pdf"],
-        ["EXTENSION",".adobe"]
+        ["EXTENSION",".adobe"],
+        ["REGULAR_EXPRESSION","([a-z]*) are ([a-z]*?) .*"]
     ],
     "Root/Documents/DOCX": [
         ["EXTENSION",".docx"]

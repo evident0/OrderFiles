@@ -1,7 +1,8 @@
 import json
 import os
 from turtle import clear
-
+#import regular expressions
+import re
 #enum with 3 states
 
 EXTENSION = "EXTENSION"
@@ -15,6 +16,8 @@ class Rule():
         self.rule_name = rule_name
 
 extensions = {}
+regex = {}
+
 def dfs(dictionary, path):
     extensions.clear()
     dfs_helper(dictionary, path, path) # path differs from operating system to operating system
@@ -31,8 +34,12 @@ def dfs_helper(dictionary, os_path, json_path): #starts with, path differs from 
                 os.makedirs(os.path.join(os_path, value[1]))
             #print ("This"+short_path + '/' + value[1])            
             dfs_helper(dictionary, os.path.join(os_path, value[1]), json_path+'/'+value[1])
-        else: # regex or extension
+        elif value[0] == EXTENSION: # regex or extension
             extensions[value[1]] = os_path # the path to the folder
+        elif value[0] == REGULAR_EXPRESSION:
+            regex[value[1]] = os_path # this will be traversed first to match any regex
+        else:
+            print("Error: unknown type")
 
 def rename_dfs(dictionary, current_name, new_name):
     dictionary[new_name] = dictionary.pop(current_name)
@@ -117,14 +124,24 @@ def write_json(file_name, data):
 def scan_directory(directory):
     for root, dirs, files in os.walk(directory):
         for file in files:
-           #check if file extension is in the list of extensions
+            cont_loop = False
+            for reg in regex:
+                if re.search(reg, file):
+                    #move file to the folder
+                    os.rename(os.path.join(root,file), os.path.join(regex[reg],file))
+                    cont_loop = True
+                    break
+            if cont_loop:
+                continue
+            #if no regular expressions matched, move file based on it's extension
+            #check if file extension is in the list of extensions
             if "."+file.split('.')[-1] in extensions:
                 #move file to the folder
                 os.rename(os.path.join(root,file), os.path.join(extensions['.'+file.split('.')[-1]],file))
 
 if __name__ == '__main__':
   
-    config = read_json('config.json')
+    config = read_json('config_output.json')
     dfs(config,"Root")
     print(extensions)
 
@@ -134,6 +151,7 @@ if __name__ == '__main__':
     ##move_folder(config, "Root", "Images", "Root/Documents/PDF", "Documento")
     ##remove_folder(config, "Root/Documents/PDF", "Documento")
     move_folder(config, "Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
+    
     '''
     rename_folder(config, None , "Root", "New Root")
     rename_folder(config, "New Root" ,"Documents", "Doc")
@@ -145,6 +163,10 @@ if __name__ == '__main__':
     '''
     scan_directory("test")
     write_json('config_output.json', config)
+    print()
+    print()
     print(config)
     print()
     print(extensions)
+    print()
+    print(regex)
