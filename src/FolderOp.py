@@ -1,6 +1,7 @@
 import os
 import shutil
 import copy
+import send2trash
 #from Order import extensions, regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
 #import Order
 #TODO: update entensions and regex with only one dfs (ex. dfs_move)
@@ -74,7 +75,7 @@ class FolderOp:
         print(os_parent_dir)
         #check if the folders exist
         if os.path.isdir(os_parent_dir) is not True:
-            print("ERROR: "+ os_parent_dir+" OR "+ os_new_parent_dir +" is not a folder in the os")
+            print("ERROR: "+ os_parent_dir+" is not a folder in the os")
             return self.config #TODO: SHOULD RETURN NULL
         #check if new directory is a subdirectory of the parent directory
         if os.path.commonprefix([os_parent_dir, os_new_parent_dir]) == os_parent_dir:      
@@ -128,65 +129,97 @@ class FolderOp:
             else:
                 print("Error: unknown type")
 
-    def remove_folder(self,dictionary, parent_dir, current_folder):
+    def remove_folder(self, parent_dir, current_folder):
+        #check if folder is in os and return if not
+        os_path = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
+
+        if os.path.isdir(os_path) is not True:
+            print("ERROR: "+ os_path+" is not a folder in the os")
+            return self.config
+
         #check if it does not exist and return if it does not
-        if parent_dir+'/'+current_folder not in dictionary:
-            print("ERROR: "+ os.path.join(self.path_to_root,parent_dir,current_folder)+" does not exist")
+        if parent_dir+'/'+current_folder not in self.config:
+            print("ERROR: "+ parent_dir+'/'+current_folder +"doesn't exist in dictionary")
             return
         #remove folder from operating system
         ##os.rmdir(os.path.join(parent_dir,current_folder))
-        shutil.rmtree(os.path.join(self.path_to_root,parent_dir,current_folder))
+        #shutil.rmtree(os_path)
+       
 
-        dictionary[parent_dir].remove([self.FOLDER,current_folder])
-        self.remove_dfs(dictionary, parent_dir+"/"+current_folder)
+        temp_dictionary = copy.deepcopy(self.config)
 
-        first_pair = next(iter((dictionary.items())))
+        temp_dictionary[parent_dir].remove([self.FOLDER,current_folder])
+        self.remove_dfs(temp_dictionary, parent_dir+"/"+current_folder)
+
+        try:
+            send2trash.send2trash(os_path)
+            self.config = temp_dictionary
+        except:
+            print("OS REMOVE FAILED REVERTING CHANGES")
+        #TODO: if anything fails run dfs because extensions and regexes may have changed
+        #first_pair = next(iter((dictionary.items())))
         #update extensions
         #first pair is the root
-        self.dfs(self.config,first_pair[0])
+        #self.dfs(self.config,first_pair[0])
 
     def remove_dfs(self,dictionary, current_name):
     
         for value in dictionary[current_name]:
             if value[0] == self.FOLDER:
                 self.remove_dfs(dictionary, current_name+'/'+value[1])
+            elif value[0] == self.EXTENSION: # regex or extension
+                self.extensions.pop(value[1]) # remove the entry from the extensions
+            elif value[0] == self.REGULAR_EXPRESSION:
+                self.regex.pop(value[1]) # remove the entry in regex
         
         dictionary.pop(current_name)
 
-    def add_folder(self,dictionary, parent_dir, current_folder, list_of_lists):
+    def add_folder(self, parent_dir, current_folder, list_of_lists):
+        #check if parent directory exists in os and return if it does not
+        if os.path.isdir(os.path.join(self.path_to_root,*parent_dir.split('/'))) is not True:
+            print("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'))+" is not a folder in the os")
+            return
+
         #check if folder exists in dictionary and return if it does
-        if parent_dir+'/'+current_folder in dictionary:
+        if parent_dir+'/'+current_folder in self.config:
             print("ERROR: "+ parent_dir+'/'+current_folder + " already exists")
             return
 
+        temp_dictionary = copy.deepcopy(self.config)
+
         #create folder in operating system
         os_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
-        os.makedirs(os.path.join(os_dir))#TODO: check if this is necessary
 
         #add the new folder to the parent directory for reference
-        dictionary[parent_dir].append([self.FOLDER, current_folder])
+        temp_dictionary[parent_dir].append([self.FOLDER, current_folder])
 
         #create the empty folder in the dictionary
-        dictionary[parent_dir+"/"+current_folder] = []
+        temp_dictionary[parent_dir+"/"+current_folder] = []
 
         #for each item in the list of lists, add it to the dictionary
         for value in list_of_lists:
             if value[0] == self.FOLDER:
                 #add the folder under the new folder
-                dictionary[parent_dir+"/"+current_folder].append([self.FOLDER, value[1]])
+                temp_dictionary[parent_dir+"/"+current_folder].append([self.FOLDER, value[1]])
                 #create the empty folder entry for the dictionary
-                dictionary[parent_dir+"/"+current_folder+"/"+value[1]] = []
+                temp_dictionary[parent_dir+"/"+current_folder+"/"+value[1]] = []               
             elif value[0] == self.EXTENSION:
                 #add the extension to the dictionary list of the new folder
-                dictionary[parent_dir+"/"+current_folder].append([self.EXTENSION, value[1]])
+                temp_dictionary[parent_dir+"/"+current_folder].append([self.EXTENSION, value[1]])
+                self.extensions[value[1]] = os.path.join(self.path_to_root,os_dir)
             elif value[0] == self.REGULAR_EXPRESSION:
                 #add the regex to the dictionary list of the new folder
-                dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, value[1]])
+                temp_dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, value[1]])
+                self.regex[value[1]] = os.path.join(self.path_to_root,os_dir)
             else:
                 print("ERROR: unknown type") # ERROR all CAPS
         
-        first_pair = next(iter((dictionary.items())))
-
+        #first_pair = next(iter((self.config.items())))
+        try:
+            os.makedirs(os_dir)
+            self.config = temp_dictionary
+        except:
+            print("ERROR: could not create folder")
         #update extensions
         #first pair is the root
-        self.dfs(self.config,first_pair[0])
+        #self.dfs(self.config,first_pair[0])

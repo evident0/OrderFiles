@@ -70,8 +70,12 @@ if __name__ == '__main__':
 
     #config = folder_op.move_folder(config, "Root/Documents", "DOCX", "Root/Documents/WORD", "NEWDOCX")
     
-    #config = folder_op.move_folder("Root", "HELLO", "Root/Documents/WORD/NEWDOCX/IMGES/PDFINIMG", "NEWHELLO")
-
+    #config = folder_op.move_folder("Root/Documents/WORD/NEWDOCX", "IMGES", "Root/Documents", "IMAGESNEWFROMDOCX")
+    #folder_op.add_folder("Root","FLDR",[[FOLDER,"NEW_FOLDER_2"],[EXTENSION,".lel"],[EXTENSION, ".hello"]]) #remove and add again
+    #folder_op.add_folder("Root/Documents/IMAGESNEWFROMDOCX","FLDRNEW",[[FOLDER,"NEW_FOLDER_200"],[EXTENSION,".leel"],[EXTENSION, ".heello"]])
+    #folder_op.remove_folder("Root/Documents/IMAGESNEWFROMDOCX","FLDRNEW")
+    #folder_op.remove_folder("Root/Documents/IMAGESNEWFROMDOCX","FLDRNEW")
+    folder_op.remove_folder("Root/Documents","IMAGESNEWFROMDOCX")
     #config = folder_op.move_folder(config, "Root/Documents/DOCX", "IMGES/PDFINIMG", "Root/Documents", "PDFIINIMG")
     
     #config = folder_op.move_folder(config, "Root", "Images", "Root/Documents/DOCX", "IMGES")
@@ -94,7 +98,7 @@ if __name__ == '__main__':
     #Unhide this
     scan = Scan(extensions, regex)
     scan.scan_directory("test")
-    write_json('config_output.json', config)
+    write_json('config_output.json', folder_op.config)
     print()
     print()
     print(config)

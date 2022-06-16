@@ -3,6 +3,10 @@
         [
             "FOLDER",
             "Documents"
+        ],
+        [
+            "FOLDER",
+            "FLDR"
         ]
     ],
     "Root/Documents": [
@@ -25,100 +29,17 @@
         [
             "EXTENSION",
             ".docx"
-        ],
-        [
-            "FOLDER",
-            "IMGES"
         ]
     ],
-    "Root/Documents/WORD/NEWDOCX/IMGES": [
-        [
-            "EXTENSION",
-            ".png"
-        ],
-        [
-            "EXTENSION",
-            ".tiff"
-        ],
-        [
-            "EXTENSION",
-            ".jpg"
-        ],
-        [
-            "REGULAR_EXPRESSION",
-            "^The.*Spain"
-        ],
+    "Root/FLDR": [
         [
             "FOLDER",
-            "PDFINIMG"
+            "NEW_FOLDER_2"
+        ],
+        [
+            "EXTENSION",
+            ".lel"
         ]
     ],
-    "Root/Documents/WORD/NEWDOCX/IMGES/PDFINIMG": [
-        [
-            "EXTENSION",
-            ".pdf"
-        ],
-        [
-            "EXTENSION",
-            ".adobe"
-        ],
-        [
-            "REGULAR_EXPRESSION",
-            "([a-z]*) are ([a-z]*?) .*"
-        ],
-        [
-            "FOLDER",
-            "NEWHELLO"
-        ]
-    ],
-    "Root/Documents/WORD/NEWDOCX/IMGES/PDFINIMG/NEWHELLO": [
-        [
-            "EXTENSION",
-            ".txt"
-        ],
-        [
-            "EXTENSION",
-            ".html"
-        ],
-        [
-            "EXTENSION",
-            ".css"
-        ],
-        [
-            "EXTENSION",
-            ".js"
-        ],
-        [
-            "EXTENSION",
-            ".php"
-        ],
-        [
-            "EXTENSION",
-            ".asp"
-        ],
-        [
-            "EXTENSION",
-            ".aspx"
-        ],
-        [
-            "EXTENSION",
-            ".jsp"
-        ],
-        [
-            "EXTENSION",
-            ".xml"
-        ],
-        [
-            "EXTENSION",
-            ".xsl"
-        ],
-        [
-            "EXTENSION",
-            ".xsd"
-        ],
-        [
-            "EXTENSION",
-            ".xquery"
-        ]
-    ]
+    "Root/FLDR/NEW_FOLDER_2": []
 }
