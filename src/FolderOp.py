@@ -15,19 +15,19 @@ class FolderOp:
         self.FOLDER = FOLDER
         self.REGULAR_EXPRESSION = REGULAR_EXPRESSION
             
-    def dfs(self,dictionary, path):
+    def dfs(self, path):
         self.extensions.clear()
         self.regex.clear()
-        self.dfs_helper(dictionary, path, path) # path differs from operating system to operating system
+        self.dfs_helper(path, path) # path differs from operating system to operating system
 
-    def dfs_helper(self,dictionary, os_path, json_path): #starts with, path differs from operating system to operating system
+    def dfs_helper(self, os_path, json_path): #starts with, path differs from operating system to operating system
     
-        for value in dictionary[json_path]: #  dict value is a list of lists [value[0]:type, value[1]:name]
+        for value in self.config[json_path]: #  dict value is a list of lists [value[0]:type, value[1]:name]
             if value[0] == self.FOLDER:
                 #create a file if it doesn't exist already
                 if not os.path.exists(os.path.join(self.path_to_root,os_path,value[1])):
                     os.makedirs(os.path.join(self.path_to_root, os_path, value[1]))   
-                self.dfs_helper(dictionary, os.path.join(os_path, value[1]), json_path+'/'+value[1])
+                self.dfs_helper(os.path.join(os_path, value[1]), json_path+'/'+value[1])
             elif value[0] == self.EXTENSION: # regex or extension
                 self.extensions[value[1]] = os.path.join(self.path_to_root,os_path) # the path to the folder
             elif value[0] == self.REGULAR_EXPRESSION:
@@ -62,10 +62,10 @@ class FolderOp:
     def colored(self,r, g, b, text):
         return "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m".format(r, g, b, text)
 
-    def move_folder(self,dictionary, parent_dir, current_folder, new_parent_directory, new_folder):
+    def move_folder(self, parent_dir, current_folder, new_parent_directory, new_folder):
 
         #copy the dictionary to a new tempory dictionary
-        temp_dictionary = copy.deepcopy(dictionary)
+        temp_dictionary = copy.deepcopy(self.config)
 
         #check if it is a folder
         os_parent_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
@@ -75,15 +75,15 @@ class FolderOp:
         #check if the folders exist
         if os.path.isdir(os_parent_dir) is not True:
             print("ERROR: "+ os_parent_dir+" OR "+ os_new_parent_dir +" is not a folder in the os")
-            return dictionary
+            return self.config #TODO: SHOULD RETURN NULL
         #check if new directory is a subdirectory of the parent directory
         if os.path.commonprefix([os_parent_dir, os_new_parent_dir]) == os_parent_dir:      
             print("ERROR: "+ os_new_parent_dir + " is a subdirectory of " + os_parent_dir)
-            return dictionary
+            return self.config
         #check if the folder exists in dictionary
-        if parent_dir+'/'+current_folder not in dictionary:
+        if parent_dir+'/'+current_folder not in self.config:
             print("ERROR: "+ parent_dir+'/'+current_folder +" does not exist in dictionary")
-            return dictionary
+            return self.config
         #check if the new parent directory exists in dictionary
         #if new_parent_directory+'/'+new_folder not in dictionary:
         #    print("ERROR: "+ new_parent_directory+'/'+new_folder +" does not exist in dictionary")
@@ -99,9 +99,10 @@ class FolderOp:
         self.move_dfs(temp_dictionary, parent_dir+"/"+current_folder, new_parent_directory+"/"+new_folder);
 
         try:
-            #os.rename(os_parent_dir,os_new_parent_dir)#os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
+            os.rename(os_parent_dir,os_new_parent_dir)#os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
             #dictionary = copy.deepcopy(temp_dictionary)
-            return temp_dictionary
+            self.config = temp_dictionary
+            return self.config
             print("changed?")
         except:
             print("OS MOVE FAILED REVERTING CHANGES")

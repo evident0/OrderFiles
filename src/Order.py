@@ -43,7 +43,7 @@ if __name__ == '__main__':
     path_to_root = ""
 
     folder_op = FolderOp(path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION)
-    folder_op.dfs(config,"Root")
+    folder_op.dfs("Root")
 
     print(extensions)
 
@@ -68,7 +68,9 @@ if __name__ == '__main__':
 
     #config = folder_op.move_folder(config, "Root/Documents", "PDFINDOC", "Root/Documents/DOCX/IMGES", "PDFINIMG")
 
-    config = folder_op.move_folder(config, "Root/Documents", "DOCX", "Root/Documents/WORD", "NEWDOCX")
+    #config = folder_op.move_folder(config, "Root/Documents", "DOCX", "Root/Documents/WORD", "NEWDOCX")
+    
+    #config = folder_op.move_folder("Root", "HELLO", "Root/Documents/WORD/NEWDOCX/IMGES/PDFINIMG", "NEWHELLO")
 
     #config = folder_op.move_folder(config, "Root/Documents/DOCX", "IMGES/PDFINIMG", "Root/Documents", "PDFIINIMG")
     
@@ -90,8 +92,8 @@ if __name__ == '__main__':
     '''
     #scan_directory("test")
     #Unhide this
-    #scan = Scan(extensions, regex)
-    #scan.scan_directory("test")
+    scan = Scan(extensions, regex)
+    scan.scan_directory("test")
     write_json('config_output.json', config)
     print()
     print()

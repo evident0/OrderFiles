@@ -65,6 +65,60 @@
         [
             "REGULAR_EXPRESSION",
             "([a-z]*) are ([a-z]*?) .*"
+        ],
+        [
+            "FOLDER",
+            "NEWHELLO"
+        ]
+    ],
+    "Root/Documents/WORD/NEWDOCX/IMGES/PDFINIMG/NEWHELLO": [
+        [
+            "EXTENSION",
+            ".txt"
+        ],
+        [
+            "EXTENSION",
+            ".html"
+        ],
+        [
+            "EXTENSION",
+            ".css"
+        ],
+        [
+            "EXTENSION",
+            ".js"
+        ],
+        [
+            "EXTENSION",
+            ".php"
+        ],
+        [
+            "EXTENSION",
+            ".asp"
+        ],
+        [
+            "EXTENSION",
+            ".aspx"
+        ],
+        [
+            "EXTENSION",
+            ".jsp"
+        ],
+        [
+            "EXTENSION",
+            ".xml"
+        ],
+        [
+            "EXTENSION",
+            ".xsl"
+        ],
+        [
+            "EXTENSION",
+            ".xsd"
+        ],
+        [
+            "EXTENSION",
+            ".xquery"
         ]
     ]
 }
