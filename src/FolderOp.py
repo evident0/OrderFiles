@@ -101,7 +101,7 @@ class FolderOp:
         try:
             os.rename(os_parent_dir,os_new_parent_dir)#os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
             #dictionary = copy.deepcopy(temp_dictionary)
-            self.config = temp_dictionary
+            self.config = temp_dictionary #TODO: CHECK TO SEE IF CONFIG UPDATES PROPERLY
             return self.config
             print("changed?")
         except:
