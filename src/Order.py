@@ -53,7 +53,26 @@ if __name__ == '__main__':
     ##move_folder(config, "Root", "Images", "Root/Documents/PDF", "Documento")
     ##remove_folder(config, "Root/Documents/PDF", "Documento")
     #move_folder(config, "Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
-    folder_op.move_folder(config, "Root/Documents", "PDF_NEW", "Root/Documents/WORD", "PDFINWORD")
+
+
+    #folder_op.move_folder(config, "Root/Documents", "PDF_NEW", "Root/Documents/WORD", "PDFINWORD")
+    #folder_op.move_folder(config, "Root/Documents/WORD", "PDFINWORD", "Root/Documents", "PDF_NEW2")
+
+
+    #folder_op.move_folder(config, "Root/Documents", "WORD", "Root/Documents/PDF_NEW2", "WORUDO")
+    #folder_op.move_folder(config, "Root/Documents/PDF_NEW2", "WORUDO", "Root/Documents/PDF_NEW2", "WORDOINPDF")
+
+
+    #config = folder_op.move_folder(config, "Root/Documents/WORD", "PDFINWORD", "Root/Documents", "PDFINDOC")
+
+
+    #config = folder_op.move_folder(config, "Root/Documents", "PDFINDOC", "Root/Documents/DOCX/IMGES", "PDFINIMG")
+
+    config = folder_op.move_folder(config, "Root/Documents", "DOCX", "Root/Documents/WORD", "NEWDOCX")
+
+    #config = folder_op.move_folder(config, "Root/Documents/DOCX", "IMGES/PDFINIMG", "Root/Documents", "PDFIINIMG")
+    
+    #config = folder_op.move_folder(config, "Root", "Images", "Root/Documents/DOCX", "IMGES")
     #######folder_op.move_folder(config, "Root/Documents/WORD", "PDFS", "Root/Documents", "PDF_NEW")
     #######folder_op.move_folder(config, "Root/Documents/WORD", "PDFS", "Root/Documents", "PDF_NEW")
     #######folder_op.move_folder(config, "Root/Documents", "PDF_NEW", "Root/Documents", "PDF")
@@ -70,8 +89,9 @@ if __name__ == '__main__':
     print(config)
     '''
     #scan_directory("test")
-    scan = Scan(extensions, regex)
-    scan.scan_directory("test")
+    #Unhide this
+    #scan = Scan(extensions, regex)
+    #scan.scan_directory("test")
     write_json('config_output.json', config)
     print()
     print()

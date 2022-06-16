@@ -2,14 +2,36 @@
     "Root": [
         [
             "FOLDER",
-            "Images"
-        ],
-        [
-            "FOLDER",
             "Documents"
         ]
     ],
-    "Root/Images": [
+    "Root/Documents": [
+        [
+            "FOLDER",
+            "WORD"
+        ]
+    ],
+    "Root/Documents/WORD": [
+        [
+            "EXTENSION",
+            ".doc"
+        ],
+        [
+            "FOLDER",
+            "NEWDOCX"
+        ]
+    ],
+    "Root/Documents/WORD/NEWDOCX": [
+        [
+            "EXTENSION",
+            ".docx"
+        ],
+        [
+            "FOLDER",
+            "IMGES"
+        ]
+    ],
+    "Root/Documents/WORD/NEWDOCX/IMGES": [
         [
             "EXTENSION",
             ".png"
@@ -25,35 +47,13 @@
         [
             "REGULAR_EXPRESSION",
             "^The.*Spain"
-        ]
-    ],
-    "Root/Documents": [
-        [
-            "FOLDER",
-            "DOCX"
         ],
         [
             "FOLDER",
-            "WORD"
+            "PDFINIMG"
         ]
     ],
-    "Root/Documents/DOCX": [
-        [
-            "EXTENSION",
-            ".docx"
-        ]
-    ],
-    "Root/Documents/WORD": [
-        [
-            "EXTENSION",
-            ".doc"
-        ],
-        [
-            "FOLDER",
-            "PDFINWORD"
-        ]
-    ],
-    "Root/Documents/WORD/PDFINWORD": [
+    "Root/Documents/WORD/NEWDOCX/IMGES/PDFINIMG": [
         [
             "EXTENSION",
             ".pdf"
