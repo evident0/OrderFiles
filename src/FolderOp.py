@@ -78,7 +78,11 @@ class FolderOp:
             print("ERROR: "+ os_parent_dir+" is not a folder in the os")
             return self.config #TODO: SHOULD RETURN NULL
         #check if new directory is a subdirectory of the parent directory
-        if os.path.commonprefix([os_parent_dir, os_new_parent_dir]) == os_parent_dir:      
+        #print("This is the thing1 "+os_parent_dir)
+        #print("This is the thing2 "+os_new_parent_dir)
+        #print("This is the thing3 "+os.path.commonpath([os_parent_dir, os_new_parent_dir]))
+        #changed from os.path.commonprefix that didn't work properly
+        if os.path.commonpath([os_parent_dir, os_new_parent_dir]) == os_parent_dir:      
             print("ERROR: "+ os_new_parent_dir + " is a subdirectory of " + os_parent_dir)
             return self.config
         #check if the folder exists in dictionary
@@ -217,6 +221,11 @@ class FolderOp:
         #first_pair = next(iter((self.config.items())))
         try:
             os.makedirs(os_dir)
+            #create the folers if the dictionary updates successfully
+            for value in list_of_lists:
+                if value[0] == self.FOLDER:
+                    os.makedirs(os.path.join(os_dir,value[1]))
+
             self.config = temp_dictionary
         except:
             print("ERROR: could not create folder")

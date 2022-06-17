@@ -13,6 +13,10 @@
         [
             "FOLDER",
             "WORD"
+        ],
+        [
+            "REGULAR_EXPRESSION",
+            "([a-z]*) are ([a-z]*?) .*"
         ]
     ],
     "Root/Documents/WORD": [
@@ -25,12 +29,6 @@
             "NEWDOCX"
         ]
     ],
-    "Root/Documents/WORD/NEWDOCX": [
-        [
-            "EXTENSION",
-            ".docx"
-        ]
-    ],
     "Root/FLDR": [
         [
             "FOLDER",
@@ -41,5 +39,34 @@
             ".lel"
         ]
     ],
-    "Root/FLDR/NEW_FOLDER_2": []
+    "Root/FLDR/NEW_FOLDER_2": [],
+    "Root/Documents/WORD/NEWDOCX": [
+        [
+            "EXTENSION",
+            ".boing"
+        ],
+        [
+            "EXTENSION",
+            ".sup"
+        ],
+        [
+            "FOLDER",
+            "YO_THIS_IS_NEW2"
+        ]
+    ],
+    "Root/Documents/WORD/NEWDOCX/YO_THIS_IS_NEW2": [
+        [
+            "FOLDER",
+            "THIS"
+        ],
+        [
+            "EXTENSION",
+            ".boing2"
+        ],
+        [
+            "EXTENSION",
+            ".sup2"
+        ]
+    ],
+    "Root/Documents/WORD/NEWDOCX/YO_THIS_IS_NEW2/THIS": []
 }

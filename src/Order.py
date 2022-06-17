@@ -9,6 +9,7 @@ import shutil
 
 from colorama import Fore #for color
 
+
 from Scan import *
 from FolderOp import *
 
@@ -75,7 +76,14 @@ if __name__ == '__main__':
     #folder_op.add_folder("Root/Documents/IMAGESNEWFROMDOCX","FLDRNEW",[[FOLDER,"NEW_FOLDER_200"],[EXTENSION,".leel"],[EXTENSION, ".heello"]])
     #folder_op.remove_folder("Root/Documents/IMAGESNEWFROMDOCX","FLDRNEW")
     #folder_op.remove_folder("Root/Documents/IMAGESNEWFROMDOCX","FLDRNEW")
-    folder_op.remove_folder("Root/Documents","IMAGESNEWFROMDOCX")
+   ##### folder_op.remove_folder("Root/Documents/WORD","NEWDOCX")
+   ##### folder_op.add_folder("Root/Documents/WORD","NEWDOCX",[[FOLDER,"A_FOLDER"],[EXTENSION,".boing"],[EXTENSION, ".sup"]])
+
+    #folder_op.remove_folder("Root/Documents/WORD/NEWDOCX","A_FOLDER")
+    #folder_op.add_folder("Root/Documents/WORD/NEWDOCX","A_FOLDER",[[FOLDER,"THIS"],[EXTENSION,".boing2"],[EXTENSION, ".sup2"]])
+    
+    #folder_op.move_folder("Root/Documents/WORD/NEWDOCX","YO_THIS_IS_NEW","Root/Documents/WORD/NEWDOCX","YO_THIS_IS_NEW2")
+
     #config = folder_op.move_folder(config, "Root/Documents/DOCX", "IMGES/PDFINIMG", "Root/Documents", "PDFIINIMG")
     
     #config = folder_op.move_folder(config, "Root", "Images", "Root/Documents/DOCX", "IMGES")
@@ -83,22 +91,16 @@ if __name__ == '__main__':
     #######folder_op.move_folder(config, "Root/Documents/WORD", "PDFS", "Root/Documents", "PDF_NEW")
     #######folder_op.move_folder(config, "Root/Documents", "PDF_NEW", "Root/Documents", "PDF")
     #move_folder(config, "Root", "Documents", "Root/Documents", "PDF")
-    ###add_folder(config,"Root","NEW_FOLDER",[[FOLDER,"NEW_FOLDER_2"],[EXTENSION,".txt"]])
+    #folder_op.add_folder("Root/Documents","PNGSNEW",[[EXTENSION,".png"],[EXTENSION,".jpg"]])
     ###remove_folder(config,"Root","NEW_FOLDER")
-    '''
-    rename_folder(config, None , "Root", "New Root")
-    rename_folder(config, "New Root" ,"Documents", "Doc")
-    
-    print(config)
-    rename_folder(config, "New Root/Doc" ,"PDF", "pf")
-    rename_folder(config, "New Root" ,"Images", "Img")
-    print(config)
-    '''
+  
     #scan_directory("test")
     #Unhide this
+    
     scan = Scan(extensions, regex)
     scan.scan_directory("test")
     write_json('config_output.json', folder_op.config)
+
     print()
     print()
     print(config)
@@ -106,3 +108,4 @@ if __name__ == '__main__':
     print(f"THE EXTENSIONS: {extensions}")
     print()
     print(regex)
+
