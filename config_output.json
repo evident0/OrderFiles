@@ -17,6 +17,10 @@
         [
             "REGULAR_EXPRESSION",
             "([a-z]*) are ([a-z]*?) .*"
+        ],
+        [
+            "FOLDER",
+            "PNGSNEW"
         ]
     ],
     "Root/Documents/WORD": [
@@ -68,5 +72,15 @@
             ".sup2"
         ]
     ],
-    "Root/Documents/WORD/NEWDOCX/YO_THIS_IS_NEW2/THIS": []
+    "Root/Documents/WORD/NEWDOCX/YO_THIS_IS_NEW2/THIS": [],
+    "Root/Documents/PNGSNEW": [
+        [
+            "EXTENSION",
+            ".png"
+        ],
+        [
+            "EXTENSION",
+            ".jpg"
+        ]
+    ]
 }

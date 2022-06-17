@@ -2,20 +2,41 @@ import os
 import shutil
 import copy
 import send2trash
+import json
 #from Order import extensions, regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
 #import Order
 #TODO: update entensions and regex with only one dfs (ex. dfs_move)
 class FolderOp:
     #class initilize with regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
-    def __init__(self, path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
+    def __init__(self,path_to_root,json_file_to_read):# path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
+        
+        self.EXTENSION = "EXTENSION"
+        self.FOLDER = "FOLDER"
+        self.REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
+
         self.path_to_root = path_to_root
-        self.regex = regex
-        self.config = config
-        self.extensions = extensions
-        self.EXTENSION = EXTENSION
-        self.FOLDER = FOLDER
-        self.REGULAR_EXPRESSION = REGULAR_EXPRESSION
-            
+
+        
+        self.config = self.read_json(json_file_to_read)
+        self.regex = {}
+        self.extensions = {}
+
+    def save_config(self,json_file_to_write):
+        self.write_json(json_file_to_write, self.config)
+      
+    #read from json file
+    def read_json(self,file_name):
+        with open(file_name, 'r') as f:
+            data = json.load(f)
+        return data
+
+    #write to json file
+    def write_json(self, file_name, data):
+        with open(file_name, 'w') as f:
+            json.dump(data, f, indent=4)
+
+
+
     def dfs(self, path):
         self.extensions.clear()
         self.regex.clear()
