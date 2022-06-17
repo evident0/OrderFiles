@@ -3,10 +3,10 @@ import re
 import shutil
 
 class Scan:
-    def __init__(self, extensions, regex):
-        self.extensions = extensions
-        self.regex = regex
-        
+    def __init__(self, folder_op):     
+        self.extensions = folder_op.extensions
+        self.regex = folder_op.regex
+
     def handle_file_collision(self,root,file):
         while os.path.isfile(os.path.join(root,file)):
                             #get the file name and extension

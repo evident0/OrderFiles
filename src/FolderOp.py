@@ -8,21 +8,24 @@ import json
 #TODO: update entensions and regex with only one dfs (ex. dfs_move)
 class FolderOp:
     #class initilize with regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
-    def __init__(self,path_to_root,json_file_to_read):# path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
+    def __init__(self,path_to_root,json_file_to_read,root):# path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
         
         self.EXTENSION = "EXTENSION"
         self.FOLDER = "FOLDER"
         self.REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
 
         self.path_to_root = path_to_root
-
+        self.root = root
+        self.json_file = json_file_to_read
         
         self.config = self.read_json(json_file_to_read)
         self.regex = {}
         self.extensions = {}
 
-    def save_config(self,json_file_to_write):
-        self.write_json(json_file_to_write, self.config)
+        self.dfs(self.root)
+
+    def save_config(self):
+        self.write_json(self.json_file, self.config)
       
     #read from json file
     def read_json(self,file_name):
@@ -56,18 +59,17 @@ class FolderOp:
                 self.regex[value[1]] = os.path.join(self.path_to_root,os_path) # this will be traversed first to match any regex
             else:
                 print("Error: unknown type")
-
+    #TODO: deprecated method
     def rename_dfs(self,dictionary, current_name, new_name):
         dictionary[new_name] = dictionary.pop(current_name)
 
         for value in dictionary[new_name]:
             if value[0] == self.FOLDER:
                 self.rename_dfs(dictionary, current_name+'/'+value[1], new_name+'/'+value[1])
-                #dictionary[new_name+"/"+value[1]] = dictionary.pop(current_name+"/"+value[1])
 
+    #TODO: deprecated method
     def rename_folder(self,dictionary, parent_dir, current_name, new_name):
-
-        
+    
         if(parent_dir is not None):
             for value in dictionary[parent_dir]:
                 if value[0] == self.FOLDER and value[1] == current_name:
@@ -126,11 +128,11 @@ class FolderOp:
 
         try:
             os.rename(os_parent_dir,os_new_parent_dir)
+            self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
         except:
             print("OS MOVE FAILED REVERTING CHANGES")
-            first_pair = next(iter((self.config.items())))
-            self.dfs(first_pair[0])
+            self.dfs(self.root)
 
 
     def move_dfs(self,dictionary, current_name, new_name):
@@ -174,16 +176,11 @@ class FolderOp:
 
         try:
             send2trash.send2trash(os_path)
-            self.config = temp_dictionary
+            self.write_json(self.json_file, temp_dictionary)
+            self.config = temp_dictionary    
         except:
             print("OS REMOVE FAILED REVERTING CHANGES")
-            first_pair = next(iter((self.config.items())))
-            self.dfs(first_pair[0])
-        #TODO: if anything fails run dfs because extensions and regexes may have changed
-        #first_pair = next(iter((dictionary.items())))
-        #update extensions
-        #first pair is the root
-        #self.dfs(self.config,first_pair[0])
+            self.dfs(self.root)
 
     def remove_dfs(self,dictionary, current_name):
     
@@ -235,9 +232,8 @@ class FolderOp:
                 temp_dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, value[1]])
                 self.regex[value[1]] = os.path.join(self.path_to_root,os_dir)
             else:
-                print("ERROR: unknown type") # ERROR all CAPS
+                print("ERROR: unknown type")
         
-        #first_pair = next(iter((self.config.items())))
         try:
             os.makedirs(os_dir)
             #create the folers if the dictionary updates successfully
@@ -245,12 +241,10 @@ class FolderOp:
                 if value[0] == self.FOLDER:
                     os.makedirs(os.path.join(os_dir,value[1]))
 
+            self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
         except:
             print("ERROR: could not create folder reverting changes...")
             #TODO: add a revert function and use the root the user specified in main
-            first_pair = next(iter((self.config.items())))
-            self.dfs(first_pair[0])
-        #update extensions
-        #first pair is the root
-        #self.dfs(self.config,first_pair[0])
+            self.dfs(self.root)
+

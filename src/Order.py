@@ -18,15 +18,37 @@ FOLDER = "FOLDER"
 REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
 
 
-
 if __name__ == '__main__':
   
-    
-    folder_op = FolderOp("", 'config_output.json')
-    folder_op.dfs("Root")
+    #create a file_op object for each tree
+    folder_op = FolderOp("", 'config_output.json', 'Root')
+
+    #DONE: run initial dfs could be done inside folder_op
+    #folder_op.dfs("Root")
 
 
     print(folder_op.extensions)
+
+   
+    #do an operation on the config file
+    folder_op.move_folder("Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
+
+    #initialize a scanner pass folder_op DONE: pass folder_op to scanner
+    scan = Scan(folder_op)
+
+    #select a directory to scan
+    scan.scan_directory("test")
+
+    #save the config file DONE: do this inside folder_op
+    #folder_op.save_config('config_output.json')
+
+    print()
+    print()
+    print(folder_op.config)
+    print()
+    print(f"THE EXTENSIONS: {folder_op.extensions}")
+    print()
+    print(folder_op.regex)
 
     #move_folder(config, "Root", "Documents", "Root/Images", "Documents")
     #move_folder(config, "Root", "Documents", "Root/Images", "Doc")
@@ -34,8 +56,6 @@ if __name__ == '__main__':
     ##move_folder(config, "Root", "Images", "Root/Documents/PDF", "Documento")
     ##remove_folder(config, "Root/Documents/PDF", "Documento")
     #move_folder(config, "Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
-
-    folder_op.move_folder("Root/Documents/WORD", "PDFS", "Root/Documents", "PDF")
 
     #folder_op.move_folder(config, "Root/Documents", "PDF_NEW", "Root/Documents/WORD", "PDFINWORD")
     #folder_op.move_folder(config, "Root/Documents/WORD", "PDFINWORD", "Root/Documents", "PDF_NEW2")
@@ -78,16 +98,4 @@ if __name__ == '__main__':
     ####folder_op.remove_folder("Root","Documents")
     #scan_directory("test")
     #Unhide this
-
-    scan = Scan(folder_op.extensions, folder_op.regex)
-    scan.scan_directory("test")
-    folder_op.save_config('config_output.json')
-
-    print()
-    print()
-    print(folder_op.config)
-    print()
-    print(f"THE EXTENSIONS: {folder_op.extensions}")
-    print()
-    print(folder_op.regex)
 
