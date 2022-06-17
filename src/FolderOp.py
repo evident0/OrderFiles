@@ -97,7 +97,7 @@ class FolderOp:
         #check if the folders exist
         if os.path.isdir(os_parent_dir) is not True:
             print("ERROR: "+ os_parent_dir+" is not a folder in the os")
-            return self.config #TODO: SHOULD RETURN NULL
+            return
         #check if new directory is a subdirectory of the parent directory
         #print("This is the thing1 "+os_parent_dir)
         #print("This is the thing2 "+os_new_parent_dir)
@@ -105,11 +105,11 @@ class FolderOp:
         #changed from os.path.commonprefix that didn't work properly
         if os.path.commonpath([os_parent_dir, os_new_parent_dir]) == os_parent_dir:      
             print("ERROR: "+ os_new_parent_dir + " is a subdirectory of " + os_parent_dir)
-            return self.config
+            return
         #check if the folder exists in dictionary
         if parent_dir+'/'+current_folder not in self.config:
             print("ERROR: "+ parent_dir+'/'+current_folder +" does not exist in dictionary")
-            return self.config
+            return
         #check if the new parent directory exists in dictionary
         #if new_parent_directory+'/'+new_folder not in dictionary:
         #    print("ERROR: "+ new_parent_directory+'/'+new_folder +" does not exist in dictionary")
@@ -125,17 +125,13 @@ class FolderOp:
         self.move_dfs(temp_dictionary, parent_dir+"/"+current_folder, new_parent_directory+"/"+new_folder);
 
         try:
-            os.rename(os_parent_dir,os_new_parent_dir)#os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
-            #dictionary = copy.deepcopy(temp_dictionary)
-            self.config = temp_dictionary #TODO: CHECK TO SEE IF CONFIG UPDATES PROPERLY
-            return self.config
-            print("changed?")
+            os.rename(os_parent_dir,os_new_parent_dir)
+            self.config = temp_dictionary
         except:
             print("OS MOVE FAILED REVERTING CHANGES")
-        ########first_pair = next(iter((dictionary.items())))
-        #update extensions
-        #first pair is the root
-        ########self.dfs(self.config,first_pair[0])
+            first_pair = next(iter((self.config.items())))
+            self.dfs(first_pair[0])
+
 
     def move_dfs(self,dictionary, current_name, new_name):
         dictionary[new_name]=dictionary.pop(current_name) # append the poped dictionary to the new name
@@ -181,6 +177,8 @@ class FolderOp:
             self.config = temp_dictionary
         except:
             print("OS REMOVE FAILED REVERTING CHANGES")
+            first_pair = next(iter((self.config.items())))
+            self.dfs(first_pair[0])
         #TODO: if anything fails run dfs because extensions and regexes may have changed
         #first_pair = next(iter((dictionary.items())))
         #update extensions
@@ -249,7 +247,10 @@ class FolderOp:
 
             self.config = temp_dictionary
         except:
-            print("ERROR: could not create folder")
+            print("ERROR: could not create folder reverting changes...")
+            #TODO: add a revert function and use the root the user specified in main
+            first_pair = next(iter((self.config.items())))
+            self.dfs(first_pair[0])
         #update extensions
         #first pair is the root
         #self.dfs(self.config,first_pair[0])

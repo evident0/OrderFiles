@@ -2,85 +2,69 @@
     "Root": [
         [
             "FOLDER",
+            "Images"
+        ],
+        [
+            "FOLDER",
             "Documents"
-        ],
-        [
-            "FOLDER",
-            "FLDR"
         ]
     ],
-    "Root/Documents": [
-        [
-            "FOLDER",
-            "WORD"
-        ],
-        [
-            "REGULAR_EXPRESSION",
-            "([a-z]*) are ([a-z]*?) .*"
-        ],
-        [
-            "FOLDER",
-            "PNGSNEW"
-        ]
-    ],
-    "Root/Documents/WORD": [
-        [
-            "EXTENSION",
-            ".doc"
-        ],
-        [
-            "FOLDER",
-            "NEWDOCX"
-        ]
-    ],
-    "Root/FLDR": [
-        [
-            "FOLDER",
-            "NEW_FOLDER_2"
-        ],
-        [
-            "EXTENSION",
-            ".lel"
-        ]
-    ],
-    "Root/FLDR/NEW_FOLDER_2": [],
-    "Root/Documents/WORD/NEWDOCX": [
-        [
-            "EXTENSION",
-            ".boing"
-        ],
-        [
-            "EXTENSION",
-            ".sup"
-        ],
-        [
-            "FOLDER",
-            "YO_THIS_IS_NEW2"
-        ]
-    ],
-    "Root/Documents/WORD/NEWDOCX/YO_THIS_IS_NEW2": [
-        [
-            "FOLDER",
-            "THIS"
-        ],
-        [
-            "EXTENSION",
-            ".boing2"
-        ],
-        [
-            "EXTENSION",
-            ".sup2"
-        ]
-    ],
-    "Root/Documents/WORD/NEWDOCX/YO_THIS_IS_NEW2/THIS": [],
-    "Root/Documents/PNGSNEW": [
+    "Root/Images": [
         [
             "EXTENSION",
             ".png"
         ],
         [
             "EXTENSION",
+            ".tiff"
+        ],
+        [
+            "EXTENSION",
             ".jpg"
+        ],
+        [
+            "REGULAR_EXPRESSION",
+            "^The.*Spain"
+        ]
+    ],
+    "Root/Documents": [
+        [
+            "FOLDER",
+            "DOCX"
+        ],
+        [
+            "FOLDER",
+            "WORD"
+        ],
+        [
+            "FOLDER",
+            "PDF"
+        ]
+    ],
+    "Root/Documents/DOCX": [
+        [
+            "EXTENSION",
+            ".docx"
+        ]
+    ],
+    "Root/Documents/WORD": [
+        [
+            "EXTENSION",
+            ".doc"
+        ]
+    ],
+    "Root/Documents/PDF": [
+        [
+            "EXTENSION",
+            ".pdf"
+        ],
+        [
+            "EXTENSION",
+            ".adobe"
+        ],
+        [
+            "REGULAR_EXPRESSION",
+            "([a-z]*) are ([a-z]*?) .*"
         ]
     ]
 }

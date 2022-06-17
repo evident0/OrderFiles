@@ -22,7 +22,7 @@ REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
 if __name__ == '__main__':
   
     
-    folder_op = FolderOp("D:\TreeTest", 'config_output.json')
+    folder_op = FolderOp("", 'config_output.json')
     folder_op.dfs("Root")
 
 
@@ -35,6 +35,7 @@ if __name__ == '__main__':
     ##remove_folder(config, "Root/Documents/PDF", "Documento")
     #move_folder(config, "Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
 
+    folder_op.move_folder("Root/Documents/WORD", "PDFS", "Root/Documents", "PDF")
 
     #folder_op.move_folder(config, "Root/Documents", "PDF_NEW", "Root/Documents/WORD", "PDFINWORD")
     #folder_op.move_folder(config, "Root/Documents/WORD", "PDFINWORD", "Root/Documents", "PDF_NEW2")
@@ -71,9 +72,10 @@ if __name__ == '__main__':
     #######folder_op.move_folder(config, "Root/Documents/WORD", "PDFS", "Root/Documents", "PDF_NEW")
     #######folder_op.move_folder(config, "Root/Documents", "PDF_NEW", "Root/Documents", "PDF")
     #move_folder(config, "Root", "Documents", "Root/Documents", "PDF")
-    folder_op.add_folder("Root/Documents","PNGSNEW",[[EXTENSION,".png"],[EXTENSION,".jpg"]])
+    #folder_op.add_folder("Root/Documents","PNGSNEW",[[EXTENSION,".png"],[EXTENSION,".jpg"]])
+    #folder_op.add_folder("Root/Documents","YOYO",[[EXTENSION,"YOYO2"],[FOLDER,"YOYO2"],[EXTENSION,".damn"]])
     ###remove_folder(config,"Root","NEW_FOLDER")
-  
+    ####folder_op.remove_folder("Root","Documents")
     #scan_directory("test")
     #Unhide this
 
