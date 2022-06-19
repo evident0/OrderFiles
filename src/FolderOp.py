@@ -250,6 +250,7 @@ class FolderOp:
     def append_to_folder(self, parent_dir, current_folder, list):
 
         os_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
+        print(os_dir)
         #check if folder exists in os and return if it does not
         if os.path.isdir(os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)) is not True:
             print("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)+" is not a folder in the os")

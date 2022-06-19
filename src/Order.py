@@ -21,7 +21,7 @@ REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
 if __name__ == '__main__':
   
     #create a file_op object for each tree
-    folder_op = FolderOp("", 'config_output.json', 'Root')
+    folder_op = FolderOp("D:\TreeTest", 'config_output.json', 'Root')#changed this from root to /root
 
     #DONE: run initial dfs could be done inside folder_op
     #folder_op.dfs("Root")
@@ -37,8 +37,10 @@ if __name__ == '__main__':
     #folder_op.append_to_folder("Root/Documents/PDF", "PDFssss",[EXTENSION, ".pdfnew"])
     #folder_op.append_to_folder("Root/Documents/PDF", "PDFssss",[REGULAR_EXPRESSION, ".*"])
     #folder_op.remove_folder("Root/Documents/PDF", "PDFssss")
-    folder_op.remove_folder("Root/Documents", "more_docs")
-    #folder_op.remove_folder("","Root")
+    folder_op.append_to_folder("Root", "Documents",[FOLDER, "hello2"])
+    folder_op.append_to_folder("Root/Documents", "hello2",[FOLDER, "docs"])
+    folder_op.remove_folder("Root/Documents", "hello2")
+    #folder_op.remove_folder("/Root/Documents","hello")
     #initialize a scanner pass folder_op DONE: pass folder_op to scanner
     scan = Scan(folder_op)
 
