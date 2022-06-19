@@ -1,6 +1,6 @@
 from pathlib import Path
 from colorama import *
-import FolderOp
+from FolderOp import *
 EXTENSION = "EXTENSION"
 FOLDER = "FOLDER"
 REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
@@ -96,7 +96,8 @@ branch = '│   '
 tee =    '├── '
 last =   '└── '
 class CommandLineInterface:
-
+    def __init__(self) -> None:
+        folder_op = None #TODO multiple of these somewhere else not in this class
     def tree_dict(self,dictionary, path, prefix: str=''):
         """A recursive generator, given a directory Path object
         will yield a visual tree structure line by line
@@ -141,7 +142,9 @@ class CommandLineInterface:
         print('up <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, append new rules for a folder')
         print('scan <folder_name>, add a folder to scan and move the files')
         print('create </folder_name> create a tree structure with root </folder_name>')
-
+    def print_tree(self):
+        for line in command_line.tree_dict(self.folder_op.config, "/Root"):
+            print(line)
     def match_input(self,input):
         #split input into command and arguments
         command = input.split(' ')[0]
@@ -153,6 +156,10 @@ class CommandLineInterface:
                 return False
             else:
                 #do the mk command
+                parent_path = arguments[0].rsplit('/',1)[0]
+                folder_name = arguments[0].rsplit('/',1)[1]
+                self.folder_op.make_folder(arguments[0],arguments[1:])
+                self.print_tree()
                 return True
         elif command == 'rm':
             if len(arguments) < 1:
@@ -160,6 +167,10 @@ class CommandLineInterface:
                 return False
             else:
                 #do the rm command
+                parent_path = arguments[0].rsplit('/',1)[0]
+                folder_name = arguments[0].rsplit('/',1)[1]
+                self.folder_op.remove_folder(parent_path, folder_name)
+                self.print_tree()
                 return True
         elif command == 'mv':
             if len(arguments) < 2:
@@ -167,13 +178,48 @@ class CommandLineInterface:
                 return False
             else:
                 #do the mv command
+                parent_path = arguments[0].rsplit('/',1)[0]
+                folder_name = arguments[0].rsplit('/',1)[1]
+                new_parent_path = arguments[1].rsplit('/',1)[0]
+                new_folder_name = arguments[1].rsplit('/',1)[1]
+                self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
+                self.print_tree()
                 return True
         elif command == 'up':
-            if len(arguments) < 1:
+            if len(arguments) < 2:
                 print('up <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, append new rules for a folder')
                 return False
             else:
                 #do the up command
+                parent_path = arguments[0].rsplit('/',1)[0]
+                folder_name = arguments[0].rsplit('/',1)[1]
+                print(parent_path+'/'+folder_name)
+                self.folder_op.append_rules_to_folder(parent_path,folder_name,[["FOLDER","ininRoot"],["EXTENSION",".inroot"]])
+                self.print_tree()
+                return True
+        elif command == 'scan':#TODO scans the second you input the command but should be saved in a file
+            if len(arguments) < 1:
+                print('scan <folder_name>, add a folder to scan and move the files')
+                return False
+            else:
+                #do the scan command
+                
+                return True
+        elif command == 'create':#TODO create the files in os for now just reads them
+            if len(arguments) < 1:
+                print('create </folder_name> create a tree structure with root </folder_name>')
+                return False
+            else:
+                #do the create command
+                self.folder_op = FolderOp("D:\TreeTest", 'config_output.json', arguments[0])#TODO ROOT has been selected from a previous menu
+                print()
+                print()
+                print(self.folder_op.config)
+                print()
+                print(f"THE EXTENSIONS: {self.folder_op.extensions}")
+                print()
+                print(self.folder_op.regex)
+                self.print_tree()
                 return True
         else:
             print('Invalid command')
@@ -270,18 +316,20 @@ if __name__ == '__main__':
         "/Root/Documents/PDF/hello": []
     }
     command_line = CommandLineInterface()
-    for line in command_line.tree_dict(dict, "/Root"):
-        print(line)
-    print()
-    print('-h: Display help menu')
-    print(Fore.YELLOW+'C:/TreeTest'+Style.RESET_ALL+'> ', end='')#TODO get path_to_root
-    usr_input = input()
-    if usr_input == '-h':
-        command_line.dispay_help()
-    print(command_line.match_input(usr_input))
+    while True:
+       
+        print()
+        print('-h: Display help menu')
+        print(Fore.YELLOW+'C:/TreeTest'+Style.RESET_ALL+'> ', end='')#TODO get path_to_root
+        usr_input = input()
+        if usr_input == '-h':
+            command_line.dispay_help()
+        print(command_line.match_input(usr_input))
+        
+        print('C:/TreeTest> ', end='')
+        
+        #dispay_help()
+        #for line in tree(Path('Root')):
+        #    print(line)
+        #print("\033[31mThis is red font.\033[0m")
     
-    print('C:/TreeTest> ', end='')
-    #dispay_help()
-    #for line in tree(Path('Root')):
-    #    print(line)
-    #print("\033[31mThis is red font.\033[0m")

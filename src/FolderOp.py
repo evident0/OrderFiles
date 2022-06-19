@@ -270,7 +270,9 @@ class FolderOp:
             else:
                 temp_dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, list[1]])
                 self.regex[list[1]] = os.path.join(self.path_to_root,os_dir)
-
+        else:
+            print("ERROR: unknown type "+list[0])
+            return
         try:
             if list[0] == self.FOLDER:
                 os.makedirs(os.path.join(os_dir,list[1]))

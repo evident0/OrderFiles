@@ -42,7 +42,7 @@
         ],
         [
             "FOLDER",
-            "PDF"
+            "PDFNEW"
         ]
     ],
     "/Root/Documents/DOCX": [
@@ -57,8 +57,17 @@
             ".doc"
         ]
     ],
-    "/Root/inRoot": [],
-    "/Root/Documents/PDF": [
+    "/Root/inRoot": [
+        [
+            "FOLDER",
+            "ininRoot"
+        ],
+        [
+            "EXTENSION",
+            ".inroot"
+        ]
+    ],
+    "/Root/Documents/PDFNEW": [
         [
             "EXTENSION",
             ".pdf"
@@ -84,5 +93,6 @@
             ".*"
         ]
     ],
-    "/Root/Documents/PDF/hello": []
+    "/Root/Documents/PDFNEW/hello": [],
+    "/Root/inRoot/ininRoot": []
 }
