@@ -31,8 +31,14 @@ if __name__ == '__main__':
 
    
     #do an operation on the config file
-    folder_op.move_folder("Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
-
+    #folder_op.move_folder("Root/Documents", "PDFss", "Root/Documents", "PDF")
+    #folder_op.move_folder("Root/Documents", "PDF", "Root/Documents/WORD", "PDFS")
+    #folder_op.append_to_folder("Root/Documents/PDF", "PDFssss",[FOLDER, "hello"])
+    #folder_op.append_to_folder("Root/Documents/PDF", "PDFssss",[EXTENSION, ".pdfnew"])
+    #folder_op.append_to_folder("Root/Documents/PDF", "PDFssss",[REGULAR_EXPRESSION, ".*"])
+    #folder_op.remove_folder("Root/Documents/PDF", "PDFssss")
+    folder_op.remove_folder("Root/Documents", "more_docs")
+    #folder_op.remove_folder("","Root")
     #initialize a scanner pass folder_op DONE: pass folder_op to scanner
     scan = Scan(folder_op)
 
@@ -83,7 +89,8 @@ if __name__ == '__main__':
     #folder_op.remove_folder("Root/Documents/WORD/NEWDOCX","A_FOLDER")
     #folder_op.add_folder("Root/Documents/WORD/NEWDOCX","A_FOLDER",[[FOLDER,"THIS"],[EXTENSION,".boing2"],[EXTENSION, ".sup2"]])
     
-    #folder_op.move_folder("Root/Documents/WORD/NEWDOCX","YO_THIS_IS_NEW","Root/Documents/WORD/NEWDOCX","YO_THIS_IS_NEW2")
+    #folder_op.move_folder("Root/Documents","PDF","Root/Documents/WORD","newpdf")
+   # folder_op.move_folder("Root/Documents/WORD","PDFS","Root/Documents","PDF")
 
     #config = folder_op.move_folder(config, "Root/Documents/DOCX", "IMGES/PDFINIMG", "Root/Documents", "PDFIINIMG")
     

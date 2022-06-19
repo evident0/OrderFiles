@@ -5,7 +5,7 @@ import send2trash
 import json
 #from Order import extensions, regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
 #import Order
-#TODO: update entensions and regex with only one dfs (ex. dfs_move)
+#TODO: add a / in front of ROOT to behave like other folders
 class FolderOp:
     #class initilize with regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
     def __init__(self,path_to_root,json_file_to_read,root):# path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
@@ -247,4 +247,53 @@ class FolderOp:
             print("ERROR: could not create folder reverting changes...")
             #TODO: add a revert function and use the root the user specified in main
             self.dfs(self.root)
+    def append_to_folder(self, parent_dir, current_folder, list):
+
+        os_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
+        #check if folder exists in os and return if it does not
+        if os.path.isdir(os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)) is not True:
+            print("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)+" is not a folder in the os")
+            return
+
+        #check if folder exists in dictionary and return if it does not
+        if parent_dir+'/'+current_folder not in self.config:
+            print("ERROR: "+ parent_dir+'/'+current_folder + " doesn't exist in dictionary")
+            return
+
+        temp_dictionary = copy.deepcopy(self.config) #TODO: instead of doing this read the json again
+        
+        if list[0] == self.FOLDER:
+            #search the list in the dictionary entry if it didn't find a folder with the same name then append it
+            if [self.FOLDER, list[1]] not in temp_dictionary[parent_dir+'/'+current_folder]:
+                temp_dictionary[parent_dir+'/'+current_folder].append([self.FOLDER, list[1]])
+                temp_dictionary[parent_dir+"/"+current_folder+"/"+list[1]] = []
+            else:#TODO: check this condition first
+                print("ERROR: folder "+ list[1]+" already exists in "+parent_dir+'/'+current_folder)
+                return
+        elif list[0] == self.EXTENSION:
+            if list[1] in self.extensions:
+                print("ERROR: extension "+ list[1]+" already exists in folder: "+self.extensions[list[1]])
+                return
+            else:#TODO: else not necessary
+                temp_dictionary[parent_dir+"/"+current_folder].append([self.EXTENSION, list[1]])
+                self.extensions[list[1]] = os.path.join(self.path_to_root,os_dir)
+        elif list[0] == self.REGULAR_EXPRESSION:
+            if list[1] in self.regex:
+                print("ERROR: regex "+ list[1]+" already exists in folder: "+self.regex[list[1]])
+                return
+            else:
+                temp_dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, list[1]])
+                self.regex[list[1]] = os.path.join(self.path_to_root,os_dir)
+
+        try:
+            if list[0] == self.FOLDER:
+                os.makedirs(os.path.join(os_dir,list[1]))
+            self.write_json(self.json_file, temp_dictionary)
+            self.config = temp_dictionary
+        except:
+            print("ERROR: could not append changes reverting...")
+
+
+
+
 
