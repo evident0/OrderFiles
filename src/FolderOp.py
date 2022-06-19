@@ -195,15 +195,24 @@ class FolderOp:
         #for each item in the list of lists, add it to the dictionary
         for value in list_of_lists:
             if value[0] == self.FOLDER:
+                if [self.FOLDER,value[0]] in temp_dictionary[parent_dir+"/"+current_folder]:
+                    print("ERROR: folder "+ value[1]+" already exists in "+parent_dir+'/'+current_folder)
+                    return
                 #add the folder under the new folder
                 temp_dictionary[parent_dir+"/"+current_folder].append([self.FOLDER, value[1]])
                 #create the empty folder entry for the dictionary
                 temp_dictionary[parent_dir+"/"+current_folder+"/"+value[1]] = []               
             elif value[0] == self.EXTENSION:
+                if value[1] in self.extensions:
+                    print("ERROR: extension "+ value[1]+" already exists in folder: "+self.extensions[list[1]])
+                    return
                 #add the extension to the dictionary list of the new folder
                 temp_dictionary[parent_dir+"/"+current_folder].append([self.EXTENSION, value[1]])
                 self.extensions[value[1]] = os.path.join(self.path_to_root,os_dir)
             elif value[0] == self.REGULAR_EXPRESSION:
+                if value[1] in self.regex:
+                    print("ERROR: regex "+ value[1]+" already exists in folder: "+self.regex[list[1]])
+                    return
                 #add the regex to the dictionary list of the new folder
                 temp_dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, value[1]])
                 self.regex[value[1]] = os.path.join(self.path_to_root,os_dir)
@@ -269,6 +278,9 @@ class FolderOp:
             self.config = temp_dictionary
         except:
             print("ERROR: could not append changes reverting...")
+    def append_rules_to_folder(self, parent_dir, current_folder, list_of_lists):
+        for list in list_of_lists:
+            self.append_to_folder(parent_dir, current_folder, list)
 
 
 

@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
 
     print(folder_op.extensions)
-
+    #TODO separete program in the windows train that runs this one in a terminal
    
     #do an operation on the config file
     #folder_op.move_folder("Root/Documents", "PDFss", "Root/Documents", "PDF")
@@ -39,8 +39,8 @@ if __name__ == '__main__':
     #folder_op.remove_folder("Root/Documents/PDF", "PDFssss")
     #folder_op.append_to_folder("","Root",[FOLDER, "inRoot"])
     ##folder_op.move_folder("/Root/Documents/WORD", "PDFS", "/Root/Documents", "PDF")
-    #######folder_op.move_folder("", "Root", "", "Root_new") doesnt work
-    
+    ####folder_op.move_folder("", "Root", "", "Root_new") doesnt work
+    folder_op.append_rules_to_folder("/Root/Documents", "PDF",[[FOLDER, "hello"],[EXTENSION, ".pdfnew"],[REGULAR_EXPRESSION, ".*"]])
     ##folder_op.append_to_folder("Root/Documents", "hello2",[FOLDER, "docs"])
     ##folder_op.remove_folder("Root/Documents", "hello2")
     #folder_op.remove_folder("/Root/Documents","hello")

@@ -70,6 +70,19 @@
         [
             "REGULAR_EXPRESSION",
             "([a-z]*) are ([a-z]*?) .*"
+        ],
+        [
+            "FOLDER",
+            "hello"
+        ],
+        [
+            "EXTENSION",
+            ".pdfnew"
+        ],
+        [
+            "REGULAR_EXPRESSION",
+            ".*"
         ]
-    ]
+    ],
+    "/Root/Documents/PDF/hello": []
 }
