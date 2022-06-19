@@ -1,5 +1,5 @@
 {
-    "Root": [
+    "/Root": [
         [
             "FOLDER",
             "Images"
@@ -7,9 +7,13 @@
         [
             "FOLDER",
             "Documents"
+        ],
+        [
+            "FOLDER",
+            "inRoot"
         ]
     ],
-    "Root/Images": [
+    "/Root/Images": [
         [
             "EXTENSION",
             ".png"
@@ -27,7 +31,7 @@
             "^The.*Spain"
         ]
     ],
-    "Root/Documents": [
+    "/Root/Documents": [
         [
             "FOLDER",
             "DOCX"
@@ -41,19 +45,20 @@
             "PDF"
         ]
     ],
-    "Root/Documents/DOCX": [
+    "/Root/Documents/DOCX": [
         [
             "EXTENSION",
             ".docx"
         ]
     ],
-    "Root/Documents/WORD": [
+    "/Root/Documents/WORD": [
         [
             "EXTENSION",
             ".doc"
         ]
     ],
-    "Root/Documents/PDF": [
+    "/Root/inRoot": [],
+    "/Root/Documents/PDF": [
         [
             "EXTENSION",
             ".pdf"

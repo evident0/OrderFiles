@@ -43,53 +43,29 @@ class FolderOp:
     def dfs(self, path):
         self.extensions.clear()
         self.regex.clear()
-        self.dfs_helper(path, path) # path differs from operating system to operating system
+        self.dfs_helper(path) # path differs from operating system to operating system
 
-    def dfs_helper(self, os_path, json_path): #starts with, path differs from operating system to operating system
+    def dfs_helper(self, path): #starts with, path differs from operating system to operating system
     
-        for value in self.config[json_path]: #  dict value is a list of lists [value[0]:type, value[1]:name]
+        for value in self.config[path]: #  dict value is a list of lists [value[0]:type, value[1]:name]
+            os_path = path.split("/") # we need to split because for windows: \\, for linux: / we will join them later based on the os
             if value[0] == self.FOLDER:
                 #create a file if it doesn't exist already
-                if not os.path.exists(os.path.join(self.path_to_root,os_path,value[1])):
-                    os.makedirs(os.path.join(self.path_to_root, os_path, value[1]))   
-                self.dfs_helper(os.path.join(os_path, value[1]), json_path+'/'+value[1])
+                # the * ensures to pass the list as arguments
+                if not os.path.exists(os.path.join(self.path_to_root,*os_path, value[1])):
+                    os.makedirs(os.path.join(self.path_to_root, *os_path, value[1]))   
+                self.dfs_helper(path+'/'+value[1]) # this is for the dictionary, notice no os.path.join
             elif value[0] == self.EXTENSION: # regex or extension
-                self.extensions[value[1]] = os.path.join(self.path_to_root,os_path) # the path to the folder
+                self.extensions[value[1]] = os.path.join(self.path_to_root,*os_path) # the path to the folder
             elif value[0] == self.REGULAR_EXPRESSION:
-                self.regex[value[1]] = os.path.join(self.path_to_root,os_path) # this will be traversed first to match any regex
+                self.regex[value[1]] = os.path.join(self.path_to_root,*os_path) # this will be traversed first to match any regex
             else:
                 print("Error: unknown type")
-    #TODO: deprecated method
-    def rename_dfs(self,dictionary, current_name, new_name):
-        dictionary[new_name] = dictionary.pop(current_name)
-
-        for value in dictionary[new_name]:
-            if value[0] == self.FOLDER:
-                self.rename_dfs(dictionary, current_name+'/'+value[1], new_name+'/'+value[1])
-
-    #TODO: deprecated method
-    def rename_folder(self,dictionary, parent_dir, current_name, new_name):
-    
-        if(parent_dir is not None):
-            for value in dictionary[parent_dir]:
-                if value[0] == self.FOLDER and value[1] == current_name:
-                    value[1] = new_name
-            self.rename_dfs(dictionary, parent_dir+"/"+current_name, parent_dir+"/"+new_name);
-        else: # this is the root
-            self.rename_dfs(dictionary, current_name, new_name);
-        
-        first_pair = next(iter((dictionary.items())))
-        
-        #first pair is the root
-        self.dfs(self.config,first_pair[0])
-
-    def colored(self,r, g, b, text):
-        return "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m".format(r, g, b, text)
 
     def move_folder(self, parent_dir, current_folder, new_parent_directory, new_folder):
 
         #copy the dictionary to a new tempory dictionary
-        temp_dictionary = copy.deepcopy(self.config)
+        temp_dictionary = copy.deepcopy(self.config) # the idea is to apply changes only if I/O operations succeed
 
         #check if it is a folder
         os_parent_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
