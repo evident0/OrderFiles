@@ -3,6 +3,7 @@ import shutil
 import copy
 import send2trash
 import json
+from pathlib import Path#mkdir
 #from Order import extensions, regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
 #import Order
 #TODO: add a / in front of ROOT to behave like other folders
@@ -17,12 +18,35 @@ class FolderOp:
         self.path_to_root = path_to_root
         self.root = root
         self.json_file = json_file_to_read
+
+        try:
+            self.config = self.read_json(json_file_to_read)
+        except ValueError:
+            print("json is empty, creating new empty config")
+            self.config = {}
+        except FileNotFoundError:
+            print("File not found error")
+        except PermissionError:
+            print("File permission denied")
         
-        self.config = self.read_json(json_file_to_read)
         self.regex = {}
         self.extensions = {}
 
-        self.dfs(self.root)
+        # get the first entry of the dictionary config
+        if self.config:
+            first_key_is_root = next(iter(self.config))
+            self.dfs(str(first_key_is_root))
+        else:
+            print("Error: config is empty")
+            print("creating a new root")
+            self.config[root] = []
+            first_key_is_root = next(iter(self.config))
+            self.dfs(str(first_key_is_root))
+            try:
+                self.write_json(json_file_to_read, self.config)
+            except:
+                print("Error: could not write to json file")
+    
 
     def save_config(self):
         self.write_json(self.json_file, self.config)
@@ -43,6 +67,11 @@ class FolderOp:
     def dfs(self, path):
         self.extensions.clear()
         self.regex.clear()
+
+        os_path = path.split("/") # this is for the root TODO: should not be here TODO: exists_ok=True
+        if not os.path.exists(os.path.join(self.path_to_root,*os_path)):
+                os.makedirs(os.path.join(self.path_to_root, *os_path))
+        
         self.dfs_helper(path) # path differs from operating system to operating system
 
     def dfs_helper(self, path): #starts with, path differs from operating system to operating system
@@ -146,8 +175,9 @@ class FolderOp:
        
 
         temp_dictionary = copy.deepcopy(self.config)
+        if parent_dir != "": # fast fix for root directory
+            temp_dictionary[parent_dir].remove([self.FOLDER,current_folder])
 
-        temp_dictionary[parent_dir].remove([self.FOLDER,current_folder])
         self.remove_dfs(temp_dictionary, parent_dir+"/"+current_folder)
 
         try:
@@ -177,7 +207,7 @@ class FolderOp:
             return
 
         #check if folder exists in dictionary and return if it does
-        if parent_dir+'/'+current_folder in self.config:
+        if parent_dir+'/'+current_folder in self.config:#TODO call append_rules if it exists instead of throwing an error
             print("ERROR: "+ parent_dir+'/'+current_folder + " already exists")
             return
 
@@ -220,11 +250,11 @@ class FolderOp:
                 print("ERROR: unknown type")
         
         try:
-            os.makedirs(os_dir)
+            os.makedirs(os_dir, exist_ok=True)
             #create the folers if the dictionary updates successfully
             for value in list_of_lists:
                 if value[0] == self.FOLDER:
-                    os.makedirs(os.path.join(os_dir,value[1]))
+                    os.makedirs(os.path.join(os_dir,value[1]), exist_ok=True)
 
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
@@ -271,7 +301,7 @@ class FolderOp:
                 temp_dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, list[1]])
                 self.regex[list[1]] = os.path.join(self.path_to_root,os_dir)
         else:
-            print("ERROR: unknown type "+list[0])
+            print(f"ERROR: unknown type {list[0]}")
             return
         try:
             if list[0] == self.FOLDER:

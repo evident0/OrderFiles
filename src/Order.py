@@ -37,10 +37,15 @@ if __name__ == '__main__':
     #folder_op.append_to_folder("Root/Documents/PDF", "PDFssss",[EXTENSION, ".pdfnew"])
     #folder_op.append_to_folder("Root/Documents/PDF", "PDFssss",[REGULAR_EXPRESSION, ".*"])
     #folder_op.remove_folder("Root/Documents/PDF", "PDFssss")
-    #folder_op.append_to_folder("","Root",[FOLDER, "inRoot"])
+    #folder_op.add_folder("","Root",[FOLDER, "inRoott"])
+    #folder_op.remove_folder("","Root")
+    #folder_op.add_folder("/Root","Documents",[[FOLDER, "inDocuments"]])
+    #folder_op.append_rules_to_folder("/Root","inRoott",[[FOLDER, "hellop"]])
     ##folder_op.move_folder("/Root/Documents/WORD", "PDFS", "/Root/Documents", "PDF")
     ####folder_op.move_folder("", "Root", "", "Root_new") doesnt work
-    folder_op.append_rules_to_folder("/Root/Documents", "PDF",[[FOLDER, "hello"],[EXTENSION, ".pdfnew"],[REGULAR_EXPRESSION, ".*"]])
+    ###folder_op.append_rules_to_folder("/Root/Documents", "PDF",[[FOLDER, "hello"],[EXTENSION, ".pdfnew"],[REGULAR_EXPRESSION, ".*"]])
+    ###folder_op.remove_folder("", "Root")
+    ###folder_op.add_folder("", "Root2", [[FOLDER,"helloooo"]])
     ##folder_op.append_to_folder("Root/Documents", "hello2",[FOLDER, "docs"])
     ##folder_op.remove_folder("Root/Documents", "hello2")
     #folder_op.remove_folder("/Root/Documents","hello")
@@ -48,7 +53,7 @@ if __name__ == '__main__':
     scan = Scan(folder_op)
 
     #select a directory to scan
-    scan.scan_directory("test")
+    #scan.scan_directory("test")
 
     #save the config file DONE: do this inside folder_op
     #folder_op.save_config('config_output.json')

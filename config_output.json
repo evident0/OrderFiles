@@ -2,97 +2,14 @@
     "/Root": [
         [
             "FOLDER",
-            "Images"
-        ],
-        [
-            "FOLDER",
             "Documents"
-        ],
-        [
-            "FOLDER",
-            "inRoot"
-        ]
-    ],
-    "/Root/Images": [
-        [
-            "EXTENSION",
-            ".png"
-        ],
-        [
-            "EXTENSION",
-            ".tiff"
-        ],
-        [
-            "EXTENSION",
-            ".jpg"
-        ],
-        [
-            "REGULAR_EXPRESSION",
-            "^The.*Spain"
         ]
     ],
     "/Root/Documents": [
         [
             "FOLDER",
-            "DOCX"
-        ],
-        [
-            "FOLDER",
-            "WORD"
-        ],
-        [
-            "FOLDER",
-            "PDFNEW"
+            "inDocuments"
         ]
     ],
-    "/Root/Documents/DOCX": [
-        [
-            "EXTENSION",
-            ".docx"
-        ]
-    ],
-    "/Root/Documents/WORD": [
-        [
-            "EXTENSION",
-            ".doc"
-        ]
-    ],
-    "/Root/inRoot": [
-        [
-            "FOLDER",
-            "ininRoot"
-        ],
-        [
-            "EXTENSION",
-            ".inroot"
-        ]
-    ],
-    "/Root/Documents/PDFNEW": [
-        [
-            "EXTENSION",
-            ".pdf"
-        ],
-        [
-            "EXTENSION",
-            ".adobe"
-        ],
-        [
-            "REGULAR_EXPRESSION",
-            "([a-z]*) are ([a-z]*?) .*"
-        ],
-        [
-            "FOLDER",
-            "hello"
-        ],
-        [
-            "EXTENSION",
-            ".pdfnew"
-        ],
-        [
-            "REGULAR_EXPRESSION",
-            ".*"
-        ]
-    ],
-    "/Root/Documents/PDFNEW/hello": [],
-    "/Root/inRoot/ininRoot": []
+    "/Root/Documents/inDocuments": []
 }
