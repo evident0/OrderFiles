@@ -12,7 +12,7 @@ from colorama import Fore #for color
 
 from Scan import *
 from FolderOp import *
-
+from TreeOp import *
 EXTENSION = "EXTENSION"
 FOLDER = "FOLDER"
 REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
@@ -21,13 +21,20 @@ REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
 if __name__ == '__main__':
   
     #create a file_op object for each tree
-    folder_op = FolderOp("D:\TreeTest", 'config_output.json', '/Root')#changed this from root to /root
+    #######folder_op = FolderOp("D:\TreeTest", 'config_output.json', '/Root')#changed this from root to /root
 
     #DONE: run initial dfs could be done inside folder_op
     #folder_op.dfs("Root")
 
-
-    print(folder_op.extensions)
+    treeOp = TreeOp()
+    treeOp.create_new_tree("D:\TreeTest", "Root") #also creates root folders
+    treeOp.create_new_tree("D:\TreeTest", "Hello") #also creates root folders
+    folder_op = treeOp.select_tree("D:\TreeTest", "Hello") #selects the tree
+    folder_op.add_folder("/Hello", "Yo", [[FOLDER,"YO2"],[FOLDER,"YO3"],[EXTENSION,".yo"]])
+    folder_op.append_rules_to_folder("/Hello", "Yo", [[EXTENSION,".yoyoa"],[REGULAR_EXPRESSION,"*.a*"]])
+    folder_op = treeOp.select_tree("D:\TreeTest", "Root") #selects a new tree
+    folder_op.add_folder("/Root", "Yo", [[FOLDER,"YO2inRoot"],[FOLDER,"YO3inRoot"],[EXTENSION,".yoinroot"]])
+    ###########print(folder_op.extensions)
     #TODO separete program in the windows train that runs this one in a terminal
    
     #do an operation on the config file
@@ -50,21 +57,21 @@ if __name__ == '__main__':
     ##folder_op.remove_folder("Root/Documents", "hello2")
     #folder_op.remove_folder("/Root/Documents","hello")
     #initialize a scanner pass folder_op DONE: pass folder_op to scanner
-    scan = Scan(folder_op)
+    #########scan = Scan(folder_op)
 
     #select a directory to scan
     #scan.scan_directory("test")
 
     #save the config file DONE: do this inside folder_op
     #folder_op.save_config('config_output.json')
-
+    '''
     print()
     print()
     print(folder_op.config)
     print()
     print(f"THE EXTENSIONS: {folder_op.extensions}")
     print()
-    print(folder_op.regex)
+    print(folder_op.regex)'''
 
     #move_folder(config, "Root", "Documents", "Root/Images", "Documents")
     #move_folder(config, "Root", "Documents", "Root/Images", "Doc")

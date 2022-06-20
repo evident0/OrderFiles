@@ -1,0 +1,40 @@
+{
+    "/Hello": [
+        [
+            "FOLDER",
+            "Yo"
+        ]
+    ],
+    "/Hello/Yo": [
+        [
+            "FOLDER",
+            "YO2"
+        ],
+        [
+            "FOLDER",
+            "YO3"
+        ],
+        [
+            "EXTENSION",
+            ".yo"
+        ],
+        [
+            "EXTENSION",
+            ".yoyo"
+        ],
+        [
+            "REGULAR_EXPRESSION",
+            "*.*"
+        ],
+        [
+            "EXTENSION",
+            ".yoyoa"
+        ],
+        [
+            "REGULAR_EXPRESSION",
+            "*.a*"
+        ]
+    ],
+    "/Hello/Yo/YO2": [],
+    "/Hello/Yo/YO3": []
+}
