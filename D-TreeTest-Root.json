@@ -1,0 +1,37 @@
+{
+    "/Root": [
+        [
+            "FOLDER",
+            "Yo"
+        ]
+    ],
+    "/Root/Yo": [
+        [
+            "FOLDER",
+            "YO2inRoot"
+        ],
+        [
+            "FOLDER",
+            "YO3inRoot"
+        ],
+        [
+            "EXTENSION",
+            ".yoinroot"
+        ],
+        [
+            "EXTENSION",
+            ".pdf"
+        ],
+        [
+            "FOLDER",
+            ".png"
+        ],
+        [
+            "EXTENSION",
+            ".png"
+        ]
+    ],
+    "/Root/Yo/YO2inRoot": [],
+    "/Root/Yo/YO3inRoot": [],
+    "/Root/Yo/.png": []
+}

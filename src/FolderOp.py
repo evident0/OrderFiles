@@ -313,6 +313,12 @@ class FolderOp:
     def append_rules_to_folder(self, parent_dir, current_folder, list_of_lists):
         for list in list_of_lists:
             self.append_to_folder(parent_dir, current_folder, list)
+    def touch_folder(self, parent_dir, current_folder, list_of_lists):
+        #check if folder exists in the dictionary
+        if parent_dir+'/'+current_folder not in self.config:
+            self.add_folder(parent_dir, current_folder, list_of_lists)
+        else:
+            self.append_rules_to_folder(parent_dir, current_folder, list_of_lists)
 
 
 

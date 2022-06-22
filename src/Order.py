@@ -27,13 +27,18 @@ if __name__ == '__main__':
     #folder_op.dfs("Root")
 
     treeOp = TreeOp()
-    treeOp.create_new_tree("D:\TreeTest", "Root") #also creates root folders
+    treeOp.create_new_tree("D:\TreeTest", "Root") #also creates root folders TODO add the slash here
     treeOp.create_new_tree("D:\TreeTest", "Hello") #also creates root folders
-    folder_op = treeOp.select_tree("D:\TreeTest", "Hello") #selects the tree
-    folder_op.add_folder("/Hello", "Yo", [[FOLDER,"YO2"],[FOLDER,"YO3"],[EXTENSION,".yo"]])
-    folder_op.append_rules_to_folder("/Hello", "Yo", [[EXTENSION,".yoyoa"],[REGULAR_EXPRESSION,"*.a*"]])
+    folder_op = treeOp.select_tree("D:\TreeTest", "Hello") #selects the tree returns null
+    #folder_op.add_folder("/Hello", "Yo", [[FOLDER,"YO2"],[FOLDER,"YO3"],[EXTENSION,".yo"]])
+    #folder_op.append_rules_to_folder("/Hello", "Yo", [[EXTENSION,".yoyoa"],[REGULAR_EXPRESSION,"*.a*"]])
+    folder_op.touch_folder("/Hello", "Yo", [[FOLDER,"YO2"],[FOLDER,"YO3"],[EXTENSION,".yo"]])
+    folder_op.touch_folder("/Hello", "Yo", [[EXTENSION,".yoyoa"],[REGULAR_EXPRESSION,"*.a*"]])
     folder_op = treeOp.select_tree("D:\TreeTest", "Root") #selects a new tree
-    folder_op.add_folder("/Root", "Yo", [[FOLDER,"YO2inRoot"],[FOLDER,"YO3inRoot"],[EXTENSION,".yoinroot"]])
+    folder_op.touch_folder("/Root", "Yo", [[FOLDER,"YO2inRoot"],[FOLDER,"YO3inRoot"],[EXTENSION,".yoinroot"]])
+    folder_op.touch_folder("/Root", "Yo", [[EXTENSION,".pdf"],[EXTENSION,".png"]])
+    treeOp.add_scanable_folder(folder_op, "test")#this should not be a folder inside the config file
+    treeOp.order_files(folder_op)
     ###########print(folder_op.extensions)
     #TODO separete program in the windows train that runs this one in a terminal
    
