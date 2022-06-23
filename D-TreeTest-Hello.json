@@ -27,6 +27,34 @@
             "*.a*"
         ]
     ],
-    "/Hello/Yo/YO2": [],
-    "/Hello/Yo/YO3": []
+    "/Hello/Yo/YO2": [
+        [
+            "FOLDER",
+            "el_new"
+        ]
+    ],
+    "/Hello/Yo/YO3": [],
+    "/Hello/Yo/YO2/el_new": [
+        [
+            "FOLDER",
+            "elnewnumerodos"
+        ],
+        [
+            "EXTENSION",
+            ".el"
+        ],
+        [
+            "EXTENSION",
+            ".png"
+        ],
+        [
+            "EXTENSION",
+            ".png2"
+        ],
+        [
+            "REGULAR_EXPRESSION",
+            "\\d+"
+        ]
+    ],
+    "/Hello/Yo/YO2/el_new/elnewnumerodos": []
 }

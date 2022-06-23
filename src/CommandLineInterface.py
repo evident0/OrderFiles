@@ -1,5 +1,6 @@
 from pathlib import Path
 from posixpath import basename
+import ast #literal_eval of input argument for touching folders
 from colorama import *
 from FolderOp import *
 from TreeOp import *
@@ -163,7 +164,7 @@ class CommandLineInterface:
         for line in command_line.tree_dict(self.folder_op.config, self.folder_op.root):#TODO self.folder_op
             print(line)
     
-    def tree_operations(self, command, arguments_size , parent_path, folder_name, new_parent_path, new_folder_name):
+    def tree_operations(self, command, arguments_size , arguments):
        
         if command == 'mk':
             if arguments_size < 2:
@@ -171,9 +172,27 @@ class CommandLineInterface:
                 return False
             else:
                 #do the mk command
-             
+                try:
+                    parent_path = arguments[0].rsplit('/',1)[0]
+                    folder_name = arguments[0].rsplit('/',1)[1]
+                except IndexError:
+                    print('<folder_name> is a relative path ex. /Root/Documents/PDF')
+                    return False
+                
+                try:
+                    rule_list = ast.literal_eval(arguments[1])
+                    #check if rule_list is a list of lists
+                    if not isinstance(rule_list, list) or not (isinstance(el, list) for el in rule_list):
+                        print('<ruless> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
+                        return False
+                except SyntaxError:
+                    print('<rules> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
+                    return False
+                
+
                 #self.folder_op.make_folder(arguments[0],arguments[1:])
                 print("making...")
+                self.folder_op.touch_folder(parent_path, folder_name, rule_list)
                 self.print_tree()
                 return True
         elif command == 'rm':
@@ -181,6 +200,12 @@ class CommandLineInterface:
                 print('rm <folder_name>, recursively send directory to trash')
                 return False
             else:
+                try:
+                    parent_path = arguments[0].rsplit('/',1)[0]
+                    folder_name = arguments[0].rsplit('/',1)[1]
+                except IndexError:
+                    print('<folder_name> is a relative path ex. /Root/Documents/PDF')
+                    return False
                 #do the rm command
                 self.folder_op.remove_folder(parent_path,folder_name)
                 ##self.folder_op.remove_folder(parent_path, folder_name)
@@ -192,7 +217,16 @@ class CommandLineInterface:
                 print('mv <folder_name> <new_folder_name>, move folder to new location')
                 return False
             else:
+                try:
+                    parent_path = arguments[0].rsplit('/',1)[0]
+                    folder_name = arguments[0].rsplit('/',1)[1]
+                    new_parent_path = arguments[1].rsplit('/',1)[0]
+                    new_folder_name = arguments[1].rsplit('/',1)[1]
+                except IndexError:
+                    print('<folder_name> is a relative path ex. /Root/Documents/PDF')
+                    return False
                 #do the mv command
+
                 print (f"ppath {parent_path},pname {folder_name}, nppath{new_parent_path}, npname{new_folder_name}")
                 self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
                 #self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
@@ -225,7 +259,7 @@ class CommandLineInterface:
         folder_name = ""
         new_parent_path = ""
         new_folder_name = ""
-        if len(arguments) >= 1:
+        '''if len(arguments) >= 1:
             try:
                 parent_path = arguments[0].rsplit('/',1)[0]
                 folder_name = arguments[0].rsplit('/',1)[1]
@@ -239,7 +273,7 @@ class CommandLineInterface:
                 new_folder_name = arguments[1].rsplit('/',1)[1]
             except IndexError:
                 print('<new_folder_name> is a relative path ex. /Root/Documents/PDF')
-                return False
+                return False'''
 
         
         if command == 'scan':#TODO change to add scan
@@ -252,9 +286,17 @@ class CommandLineInterface:
                 return True
         elif command == 'create':#TODO create the files in os for now just reads them
             if len(arguments) < 1:
-                print('create </folder_name> create a tree structure with root </folder_name>')
+                print('create <folder_path> create a tree structure with root </folder_name>')
                 return False
             else:
+                try:
+                    dir_name = os.path.dirname(arguments[0])
+                    base_name = os.path.basename(arguments[0])
+                except IndexError:
+                    print('<folder_name> is a relative path ex. /Root/Documents/PDF')
+                    return False
+                #IMPORTANT TODO: it doesn't need slash ("Root" not "/Root")
+                self.tree_op.create_new_tree(dir_name, base_name) 
                 #do the create command
                 #self.folder_op = FolderOp("D:\TreeTest", 'config_output.json', arguments[0])#TODO ROOT has been selected from a previous menu
                 print("creating...")
@@ -263,7 +305,7 @@ class CommandLineInterface:
         elif command == 'select':
             self.tree_selected = self.select_tree()
         elif self.tree_selected != "":#TODO change this
-            is_ok = self.tree_operations(command, len(arguments), parent_path, folder_name, new_parent_path, new_folder_name)
+            is_ok = self.tree_operations(command, len(arguments), arguments)
             if not is_ok:
                 return False
             return True

@@ -23,7 +23,9 @@ class TreeOp:
 
     def create_new_tree(self, tree_path_to_root, root_name):
         os_path = os.path.join(tree_path_to_root , root_name)
-
+        if not os.path.isdir(tree_path_to_root):
+            print("Parent directory of tree must be a valid os directory")
+            return
         if os_path in self.tree_config:
             print("Tree already exists")
             return
