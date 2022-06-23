@@ -1,92 +1,11 @@
 from pathlib import Path
+from posixpath import basename
 from colorama import *
 from FolderOp import *
+from TreeOp import *
 EXTENSION = "EXTENSION"
 FOLDER = "FOLDER"
 REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
-'''class DisplayablePath(object):
-    display_filename_prefix_middle = '├──'
-    display_filename_prefix_last = '└──'
-    display_parent_prefix_middle = '    '
-    display_parent_prefix_last = '│   '
-
-    def __init__(self, path, parent_path, is_last):
-        self.path = Path(str(path))
-        self.parent = parent_path
-        self.is_last = is_last
-        if self.parent:
-            self.depth = self.parent.depth + 1
-        else:
-            self.depth = 0
-
-    @property
-    def displayname(self):
-        if self.path.is_dir():
-            return self.path.name + '/'
-        return self.path.name
-
-    @classmethod
-    def make_tree(cls, root, parent=None, is_last=False, criteria=None):
-        root = Path(str(root))
-        criteria = criteria or cls._default_criteria
-
-        displayable_root = cls(root, parent, is_last)
-        yield displayable_root
-
-        children = sorted(list(path
-                               for path in root.iterdir()
-                               if criteria(path)),
-                          key=lambda s: str(s).lower())
-        count = 1
-        for path in children:
-            is_last = count == len(children)
-            if path.is_dir():
-                yield from cls.make_tree(path,
-                                         parent=displayable_root,
-                                         is_last=is_last,
-                                         criteria=criteria)
-            else:
-                yield cls(path, displayable_root, is_last)
-            count += 1
-
-    @classmethod
-    def _default_criteria(cls, path):
-        return True
-
-    @property
-    def displayname(self):
-        if self.path.is_dir():
-            return self.path.name + '/'
-        return self.path.name
-
-    def displayable(self):
-        if self.parent is None:
-            return self.displayname
-
-        _filename_prefix = (self.display_filename_prefix_last
-                            if self.is_last
-                            else self.display_filename_prefix_middle)
-
-        parts = ['{!s} {!s}'.format(_filename_prefix,
-                                    self.displayname)]
-
-        parent = self.parent
-        while parent and parent.parent is not None:
-            parts.append(self.display_parent_prefix_middle
-                         if parent.is_last
-                         else self.display_parent_prefix_last)
-            parent = parent.parent
-
-        return ''.join(reversed(parts))
-
-
-
-if __name__ == '__main__':
-
-    paths = DisplayablePath.make_tree(Path('Root'))
-    for path in paths:
-        print(path.displayable())
-'''
 
 from pathlib import Path
 # prefix components:
@@ -98,6 +17,7 @@ last =   '└── '
 class CommandLineInterface:
     def __init__(self) -> None:
         self.folder_op = None #TODO multiple of these somewhere else not in this class
+        self.tree_op = TreeOp() #initialize tree_op
         self.tree_selected = ""
         self.dict = {
             "/Root": [
@@ -188,7 +108,8 @@ class CommandLineInterface:
             "/Root/Documents/PDF/hello": []
         }
     def select_tree(self):
-        a_list = ["D:\\TreeTest\\Root","D:\\TreeTest\\Hello"] # TODO TreeOp
+
+        a_list = self.tree_op.get_tree_list() #DONE
         # a selection screen for the a_list
         
         number = 0
@@ -201,6 +122,8 @@ class CommandLineInterface:
         if int(sel) > len(a_list):
             print("invalid selection")
             return
+        self.folder_op = self.tree_op.select_tree(os.path.dirname(a_list[int(sel)]),os.path.basename(a_list[int(sel)]))
+        print(f"the root: {self.folder_op.root}")
         return a_list[int(sel)]
 
 
@@ -223,23 +146,6 @@ class CommandLineInterface:
                 extension = branch if pointer == tee else space
                 yield from self.tree_dict(dictionary, path + '/' + value[1], prefix=prefix+extension)
 
-
-    '''def tree(dir_path: Path, prefix: str=''):
-        """A recursive generator, given a directory Path object
-        will yield a visual tree structure line by line
-        with each line prefixed by the same characters
-        """    
-        contents = list(dir_path.iterdir()) # for loop for dir
-        # contents each get pointers that are ├── with a final └── :
-        pointers = [tee] * (len(contents) - 1) + [last] # how many |- in addition with one -
-        for pointer, path in zip(pointers, contents):
-            yield prefix + pointer + path.name
-            if path.is_dir(): # extend the prefix and recurse:
-                extension = branch if pointer == tee else space 
-                # i.e. space because last, └── , above so no more |
-                yield from tree(path, prefix=prefix+extension)'''
-
-
     def dispay_help(self):
         print(Fore.RED + 'Help Menu' + Style.RESET_ALL)
         print('select - select a tree')
@@ -251,7 +157,10 @@ class CommandLineInterface:
         print('scan <folder_name>, add a folder to scan and move the files')
         print('create </folder_name> create a tree structure with root </folder_name>')
     def print_tree(self):
-        for line in command_line.tree_dict(self.dict, "/Root"):#TODO self.folder_op
+        if self.folder_op is None:
+            print("IN_RED tree selection failed")
+            return
+        for line in command_line.tree_dict(self.folder_op.config, self.folder_op.root):#TODO self.folder_op
             print(line)
     
     def tree_operations(self, command, arguments_size , parent_path, folder_name, new_parent_path, new_folder_name):
@@ -273,7 +182,7 @@ class CommandLineInterface:
                 return False
             else:
                 #do the rm command
-               
+                self.folder_op.remove_folder(parent_path,folder_name)
                 ##self.folder_op.remove_folder(parent_path, folder_name)
                 print("removing...")
                 self.print_tree()
@@ -284,7 +193,8 @@ class CommandLineInterface:
                 return False
             else:
                 #do the mv command
-               
+                print (f"ppath {parent_path},pname {folder_name}, nppath{new_parent_path}, npname{new_folder_name}")
+                self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
                 #self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
                 print("moving...")
                 self.print_tree()
@@ -315,7 +225,7 @@ class CommandLineInterface:
         folder_name = ""
         new_parent_path = ""
         new_folder_name = ""
-        if len(arguments) == 1:
+        if len(arguments) >= 1:
             try:
                 parent_path = arguments[0].rsplit('/',1)[0]
                 folder_name = arguments[0].rsplit('/',1)[1]
@@ -323,7 +233,7 @@ class CommandLineInterface:
                 print('<folder_name> is a relative path ex. /Root/Documents/PDF')
                 return False
 
-        elif len(arguments) == 2:
+        if len(arguments) >= 2:
             try:
                 new_parent_path = arguments[1].rsplit('/',1)[0]
                 new_folder_name = arguments[1].rsplit('/',1)[1]
@@ -331,12 +241,8 @@ class CommandLineInterface:
                 print('<new_folder_name> is a relative path ex. /Root/Documents/PDF')
                 return False
 
-        if self.tree_selected != "":#TODO change this
-            is_ok = self.tree_operations(command, len(arguments), parent_path, folder_name, new_parent_path, new_folder_name)
-            if not is_ok:
-                return False
-            return True
-        elif command == 'scan':#TODO change to add scan
+        
+        if command == 'scan':#TODO change to add scan
             if len(arguments) < 1:
                 print('scan <folder_name>, add a folder to scan and move the files')
                 return False
@@ -356,8 +262,13 @@ class CommandLineInterface:
                 return True
         elif command == 'select':
             self.tree_selected = self.select_tree()
+        elif self.tree_selected != "":#TODO change this
+            is_ok = self.tree_operations(command, len(arguments), parent_path, folder_name, new_parent_path, new_folder_name)
+            if not is_ok:
+                return False
+            return True
         else:
-            print('Invalid command or no tree selected to perform operation')
+            print(f'Invalid command: {command} or no tree selected to perform operation')
             return False
 
 

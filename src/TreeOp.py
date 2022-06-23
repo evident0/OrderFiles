@@ -94,6 +94,10 @@ class TreeOp:
             scan.scan_directory(folder_to_scan)
         del scan
 
+    #return a list with all the keys in the tree config
+    def get_tree_list(self):
+        return list(self.tree_config.keys())
+        
     #read from json file
     def read_json(self,file_name):
         with open(file_name, 'r') as f:

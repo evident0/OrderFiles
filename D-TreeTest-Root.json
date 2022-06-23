@@ -7,14 +7,6 @@
     ],
     "/Root/Yo": [
         [
-            "FOLDER",
-            "YO2inRoot"
-        ],
-        [
-            "FOLDER",
-            "YO3inRoot"
-        ],
-        [
             "EXTENSION",
             ".yoinroot"
         ],
@@ -23,15 +15,19 @@
             ".pdf"
         ],
         [
-            "FOLDER",
+            "EXTENSION",
             ".png"
         ],
         [
-            "EXTENSION",
-            ".png"
+            "FOLDER",
+            "YO2inRoot"
         ]
     ],
-    "/Root/Yo/YO2inRoot": [],
-    "/Root/Yo/YO3inRoot": [],
-    "/Root/Yo/.png": []
+    "/Root/Yo/YO2inRoot": [
+        [
+            "FOLDER",
+            "inYO2"
+        ]
+    ],
+    "/Root/Yo/YO2inRoot/inYO2": []
 }

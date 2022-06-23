@@ -135,8 +135,8 @@ class FolderOp:
             os.rename(os_parent_dir,os_new_parent_dir)
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
-        except:
-            print("OS MOVE FAILED REVERTING CHANGES")
+        except Exception as e:
+            print(f"OS MOVE FAILED REVERTING CHANGES {e}")
             self.dfs(self.root)
 
 
