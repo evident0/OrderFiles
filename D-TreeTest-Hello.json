@@ -33,7 +33,12 @@
             "el_new"
         ]
     ],
-    "/Hello/Yo/YO3": [],
+    "/Hello/Yo/YO3": [
+        [
+            "EXTENSION",
+            ".jpg"
+        ]
+    ],
     "/Hello/Yo/YO2/el_new": [
         [
             "FOLDER",

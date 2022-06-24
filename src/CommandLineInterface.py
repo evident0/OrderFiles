@@ -117,7 +117,7 @@ class CommandLineInterface:
         for item in a_list:
             print(f"{number}. {item}")
             number += 1
-        print("select one tree of the above [1,2,3,...]")
+        print("select one tree of the above [0,1,2,3,...]")
         sel = input("> ")
         #check the bounds of the selection
         if int(sel) > len(a_list):
@@ -148,20 +148,26 @@ class CommandLineInterface:
                 yield from self.tree_dict(dictionary, path + '/' + value[1], prefix=prefix+extension)
 
     def dispay_help(self):
-        print(Fore.RED + 'Help Menu' + Style.RESET_ALL)
-        print('--------------------------General Commands:--------------------------')
+        #print(Back.LIGHTWHITE_EX + Fore.BLACK + '------------------------------HELP MENU------------------------------' + Style.RESET_ALL)
+        #print()
+        print(Back.LIGHTWHITE_EX + Fore.BLACK +'--------------------------General Commands:--------------------------' + Style.RESET_ALL)
+        print()
         print('create </folder_name> create a tree structure with root </folder_name>')
         print('select - select a tree')
-        print('-----------------------Tree specific commands:-----------------------')
+        print()
+        print(Back.LIGHTWHITE_EX + Fore.BLACK +'-----------------------Tree specific commands:-----------------------' + Style.RESET_ALL)
         print('--------------------(need to select a tree first)--------------------')
         print('tree - display the tree')
         print('scanner <os_path> - create a scanner for this folder. It will be used for ordering the files in the currently selected tree')
         print('order - order the files from the scanner folders')
         print('mk <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, create folder with list of rules')
+        print('rr <folder_name> <[...,[EXTENSION|REGULAR_EXPRESSION,<name>],...]>, remove rules from folder (use rm for FOLDER rules)')
         print('rm <folder_name>, recursively send directory to trash')
         print('mv <folder_name> <new_folder_name>, move folder to new location')
         print('up <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, append new rules for a folder')
         print('scan <folder_name>, add a folder to scan and move the files')
+        print()
+        print(Back.LIGHTWHITE_EX + Fore.BLACK + "page (1/1)" + Style.RESET_ALL) 
         
     def print_tree(self):
         if self.folder_op is None:
@@ -356,18 +362,30 @@ class CommandLineInterface:
 
 
 if __name__ == '__main__':
-   
+    title = """
+    
+ ██████╗ ██████╗ ██████╗ ███████╗██████╗ 
+██╔═══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
+██║   ██║██████╔╝██║  ██║█████╗  ██████╔╝
+██║   ██║██╔══██╗██║  ██║██╔══╝  ██╔══██╗
+╚██████╔╝██║  ██║██████╔╝███████╗██║  ██║
+ ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
+
+    """
+    print(title)
+    print(Back.LIGHTWHITE_EX + Fore.BLACK + "Welcome to order type help to begin" + Style.RESET_ALL)
     command_line = CommandLineInterface()
     while True:
        
         #print()
         #print('-h: Display help menu')
         #print(Fore.YELLOW+'C:/TreeTest'+Style.RESET_ALL+'> ', end='')#TODO get path_to_root
-        usr_input = input(f"{Fore.YELLOW}{command_line.tree_selected}{Style.RESET_ALL}>")
+        usr_input = input(f"{Fore.YELLOW}{command_line.tree_selected}{Style.RESET_ALL}> ")
 
         if usr_input == 'help':
             command_line.dispay_help()
-        command_line.match_input(usr_input)
+        else:
+            command_line.match_input(usr_input)
         #print('Invalid command type "help" for help')
 
         #command_line.tree_selected = command_line.select_tree()
