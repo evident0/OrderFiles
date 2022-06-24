@@ -1,3 +1,14 @@
 {
-    "/Yo": []
+    "/Yo": [
+        [
+            "FOLDER",
+            "PDFS"
+        ]
+    ],
+    "/Yo/PDFS": [
+        [
+            "EXTENSION",
+            ".pdf"
+        ]
+    ]
 }

@@ -149,14 +149,20 @@ class CommandLineInterface:
 
     def dispay_help(self):
         print(Fore.RED + 'Help Menu' + Style.RESET_ALL)
+        print('--------------------------General Commands:--------------------------')
+        print('create </folder_name> create a tree structure with root </folder_name>')
         print('select - select a tree')
+        print('-----------------------Tree specific commands:-----------------------')
+        print('--------------------(need to select a tree first)--------------------')
         print('tree - display the tree')
+        print('scanner <os_path> - create a scanner for this folder. It will be used for ordering the files in the currently selected tree')
+        print('order - order the files from the scanner folders')
         print('mk <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, create folder with list of rules')
         print('rm <folder_name>, recursively send directory to trash')
         print('mv <folder_name> <new_folder_name>, move folder to new location')
         print('up <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, append new rules for a folder')
         print('scan <folder_name>, add a folder to scan and move the files')
-        print('create </folder_name> create a tree structure with root </folder_name>')
+        
     def print_tree(self):
         if self.folder_op is None:
             print("IN_RED tree selection failed")
@@ -233,21 +239,28 @@ class CommandLineInterface:
                 print("moving...")
                 self.print_tree()
                 return True
-        elif command == 'up':
-            if arguments_size < 2:
-                print('up <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, append new rules for a folder')
+        elif command == 'scanner':
+            if arguments_size < 1:
+                print('scanner <folder_path> | add a folder to scan and move the files')
                 return False
             else:
                 #do the up command
-              
+                self.tree_op.add_scanable_folder(self.folder_op, arguments[0])
                 #self.folder_op.append_rules_to_folder(parent_path,folder_name,[["FOLDER","ininRoot"],["EXTENSION",".inroot"]])
                 print("appending...")
                 self.print_tree()
                 return True
+        elif command == 'order':
+          
+            #do the order command
+            self.tree_op.order_files(self.folder_op)
+            print("ordering...")
+
+            return True
         elif command == 'tree':
             self.print_tree()
         else:
-            print('Invalid command')
+            print(f'Invalid command: {command} type help')
             return False
 
     def match_input(self,input):
@@ -310,7 +323,7 @@ class CommandLineInterface:
                 return False
             return True
         else:
-            print(f'Invalid command: {command} or no tree selected to perform operation')
+            print(f'Invalid command: {command} or no tree selected to perform operation type help')
             return False
 
 
@@ -324,9 +337,11 @@ if __name__ == '__main__':
         #print(Fore.YELLOW+'C:/TreeTest'+Style.RESET_ALL+'> ', end='')#TODO get path_to_root
         usr_input = input(f"{Fore.YELLOW}{command_line.tree_selected}{Style.RESET_ALL}>")
 
-        if usr_input == '-h':
+        if usr_input == 'help':
             command_line.dispay_help()
-        print(command_line.match_input(usr_input))
+        command_line.match_input(usr_input)
+        #print('Invalid command type "help" for help')
+
         #command_line.tree_selected = command_line.select_tree()
         #print('C:/TreeTest> ', end='')
         
