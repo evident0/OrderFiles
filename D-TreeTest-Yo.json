@@ -7,8 +7,13 @@
     ],
     "/Yo/PDFS": [
         [
-            "EXTENSION",
-            ".pdf"
+            "FOLDER",
+            "HAHA"
+        ],
+        [
+            "REGULAR_EXPRESSION",
+            "aregex.reg"
         ]
-    ]
+    ],
+    "/Yo/PDFS/HAHA": []
 }

@@ -319,6 +319,54 @@ class FolderOp:
             self.add_folder(parent_dir, current_folder, list_of_lists)
         else:
             self.append_rules_to_folder(parent_dir, current_folder, list_of_lists)
+    def remove_folder_rules(self, parent_dir, current_folder, list_of_lists):
+        #this doesn't remove folders from the dictionary
+        #check if folder exists in the dictionary
+        os_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
+
+        if os.path.isdir(os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)) is not True:
+            print("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)+" is not a folder in the os")
+            return
+
+        if parent_dir+'/'+current_folder not in self.config:
+            print("ERROR: "+ parent_dir+'/'+current_folder + " doesn't exist in dictionary")
+            return
+        
+        temp_dictionary = copy.deepcopy(self.config)
+
+        for value in list_of_lists:
+            if value[0] == self.FOLDER:
+                print("FOLDER rule detected if you want to remove a folder (send it to trash) use remove_folder")
+                print("skipping...")
+                continue
+            elif value[0] == self.EXTENSION:
+                if value[1] not in self.extensions:
+                    print(f"ERROR: extension {value[1]} doesnt exist in extension list")
+                    return
+                else:
+                    try:
+                        temp_dictionary[parent_dir+"/"+current_folder].remove([self.EXTENSION, value[1]])
+                    except ValueError:
+                        print(f"ERROR: could not remove extension {value[1]} (doesn't exist in folder)")
+                        return
+                    del self.extensions[value[1]]
+            elif value[0] == self.REGULAR_EXPRESSION:
+                if value[1] not in self.regex:
+                    print(f"ERROR: regex {value[1]} doesnt exist in regex list")
+                    return
+                else:
+                    try:
+                        temp_dictionary[parent_dir+"/"+current_folder].remove([self.REGULAR_EXPRESSION, value[1]])
+                    except ValueError:
+                        print(f"ERROR: could not remove regex {value[1]} (doesn't exist in folder)")
+                        return
+                    del self.regex[value[1]]
+        try:
+            self.write_json(self.json_file, temp_dictionary)
+            self.config = temp_dictionary
+        except:
+            print("ERROR write to json failed: could not remove changes, reverting...")
+            self.dfs(self.root) # entensions and regex dictionaries might have changed but write failed (regenerate the dictionaries)
 
 
 

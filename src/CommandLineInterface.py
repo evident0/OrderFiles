@@ -201,6 +201,34 @@ class CommandLineInterface:
                 self.folder_op.touch_folder(parent_path, folder_name, rule_list)
                 self.print_tree()
                 return True
+        if command == 'rr':
+            if arguments_size < 2:
+                print('rr <folder_name> <[...,[EXTENSION|REGULAR_EXPRESSION,<name>],...]>, remove rules from folder (use rm for FOLDERS)')
+                return False
+            else:
+                #do the rl command
+                try:
+                    parent_path = arguments[0].rsplit('/',1)[0]
+                    folder_name = arguments[0].rsplit('/',1)[1]
+                except IndexError:
+                    print('<folder_name> is a relative path ex. /Root/Documents/PDF')
+                    return False
+                
+                try:
+                    rule_list = ast.literal_eval(arguments[1])
+                    #check if rule_list is a list of lists
+                    if not isinstance(rule_list, list) or not (isinstance(el, list) for el in rule_list):
+                        print('<ruless> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
+                        return False
+                except SyntaxError:
+                    print('<rules> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
+                    return False
+                
+                #self.folder_op.make_folder(arguments[0],arguments[1:])
+                print("making...")
+                self.folder_op.remove_folder_rules(parent_path, folder_name, rule_list)
+                self.print_tree()
+                return True
         elif command == 'rm':
             if arguments_size < 1:
                 print('rm <folder_name>, recursively send directory to trash')
