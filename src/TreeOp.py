@@ -85,6 +85,18 @@ class TreeOp:
 
         self.write_json("treeConfig.json", self.tree_config)
 
+    def remove_scanable_folder(self, folder_op, folder_to_remove):
+        if not os.path.isdir(folder_to_remove):
+            print("NOTE that folder does not exist in the os")
+            #don't return because we want to remove it from the tree config
+        path_to_root = folder_op.path_to_root
+        root = folder_op.root
+        tree_config_entry_name = os.path.join(path_to_root, root.replace("/", ""))
+        if folder_to_remove not in self.tree_config[tree_config_entry_name]:
+            print(f"Folder {folder_to_remove} not in the tree config for entry {tree_config_entry_name}, type scaninf, returning...")
+            return
+        self.tree_config[tree_config_entry_name].remove(folder_to_remove)#TODO if write fails below this will remain in memory
+        self.write_json("treeConfig.json", self.tree_config)
 
     def order_files(self, folder_op):
         #TODO DO NOT CREATE AND DELETE A SCANNER
@@ -99,6 +111,16 @@ class TreeOp:
     #return a list with all the keys in the tree config
     def get_tree_list(self):
         return list(self.tree_config.keys())
+
+    #return the list of scannable folders for a given tree
+    def get_scanable_folders(self, folder_op):
+        path_to_root = folder_op.path_to_root
+        root = folder_op.root
+        tree_config_entry_name = os.path.join(path_to_root, root.replace("/", ""))
+        if tree_config_entry_name not in self.tree_config:
+            print("ERROR Tree does not exist")
+            return None
+        return self.tree_config[tree_config_entry_name]
         
     #read from json file
     def read_json(self,file_name):

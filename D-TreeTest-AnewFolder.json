@@ -1,0 +1,23 @@
+{
+    "/AnewFolder": [
+        [
+            "FOLDER",
+            "AFolder"
+        ]
+    ],
+    "/AnewFolder/AFolder": [
+        [
+            "EXTENSION",
+            ".jpg"
+        ],
+        [
+            "EXTENSION",
+            ".hello"
+        ],
+        [
+            "FOLDER",
+            "AFolder2"
+        ]
+    ],
+    "/AnewFolder/AFolder/AFolder2": []
+}

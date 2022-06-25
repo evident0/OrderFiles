@@ -159,22 +159,27 @@ class CommandLineInterface:
         print('--------------------(need to select a tree first)--------------------')
         print('tree - display the tree')
         print('scanner <os_path> - create a scanner for this folder. It will be used for ordering the files in the currently selected tree')
+        print('scanrm <os_path> - remove a scanner from the currently selected tree')
+        print('scaninf - display all the folders to be scanned when ordering')
         print('order - order the files from the scanner folders')
         print('mk <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, create folder with list of rules')
         print('rr <folder_name> <[...,[EXTENSION|REGULAR_EXPRESSION,<name>],...]>, remove rules from folder (use rm for FOLDER rules)')
         print('rm <folder_name>, recursively send directory to trash')
         print('mv <folder_name> <new_folder_name>, move folder to new location')
-        print('up <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, append new rules for a folder')
-        print('scan <folder_name>, add a folder to scan and move the files')
         print()
         print(Back.LIGHTWHITE_EX + Fore.BLACK + "page (1/1)" + Style.RESET_ALL) 
         
     def print_tree(self):
         if self.folder_op is None:
-            print("IN_RED tree selection failed")
+            print(Back.RED+Fore.WHITE+"Tree selection failed"+Style.RESET_ALL)
             return
+        tree_empty = True
         for line in command_line.tree_dict(self.folder_op.config, self.folder_op.root):#TODO self.folder_op
             print(line)
+            tree_empty = False
+        if tree_empty:
+            print(Back.RED+Fore.WHITE+"Tree is empty"+Style.RESET_ALL)
+       
     
     def tree_operations(self, command, arguments_size , arguments):
        
@@ -278,12 +283,30 @@ class CommandLineInterface:
                 print('scanner <folder_path> | add a folder to scan and move the files')
                 return False
             else:
-                #do the up command
+                #do the scanner command
                 self.tree_op.add_scanable_folder(self.folder_op, arguments[0])
                 #self.folder_op.append_rules_to_folder(parent_path,folder_name,[["FOLDER","ininRoot"],["EXTENSION",".inroot"]])
-                print("appending...")
-                self.print_tree()
                 return True
+        elif command == 'scanrm':
+            if arguments_size < 1:
+                print('scanrm <folder_path> | remove a scanner from the currently selected tree')
+                return False
+            else:
+                #do the scanrm command
+                self.tree_op.remove_scanable_folder(self.folder_op, arguments[0])
+                #self.folder_op.append_rules_to_folder(parent_path,folder_name,[["FOLDER","ininRoot"],["EXTENSION",".inroot"]])
+                return True
+        elif command == 'scaninf':
+            #display all the folders scanned when ordering
+            scan_list = self.tree_op.get_scanable_folders(self.folder_op)
+            if len(scan_list) == 0:
+                print(Back.LIGHTWHITE_EX + Fore.BLACK  + 'No folders to scan (add one with the scanner command, type help for info)' + Style.RESET_ALL)
+            else:
+                print(Back.LIGHTWHITE_EX + Fore.BLACK +'Folders to scan' + Style.RESET_ALL)
+                for folder in scan_list:
+                    print(folder)
+            return True
+
         elif command == 'order':
           
             #do the order command
@@ -347,7 +370,7 @@ class CommandLineInterface:
                 #do the create command
                 #self.folder_op = FolderOp("D:\TreeTest", 'config_output.json', arguments[0])#TODO ROOT has been selected from a previous menu
                 print("creating...")
-                self.print_tree()
+                #self.print_tree() should not print as there is no tree yet
                 return True
         elif command == 'select':
             self.tree_selected = self.select_tree()
