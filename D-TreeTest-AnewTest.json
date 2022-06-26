@@ -1,0 +1,88 @@
+{
+    "/AnewTest": [
+        [
+            "FOLDER",
+            "pdfs"
+        ],
+        [
+            "FOLDER",
+            "Documents"
+        ],
+        [
+            "FOLDER",
+            "Files"
+        ]
+    ],
+    "/AnewTest/pdfs": [
+        [
+            "EXTENSION",
+            ".pdf"
+        ]
+    ],
+    "/AnewTest/Documents": [
+        [
+            "FOLDER",
+            "WORD"
+        ],
+        [
+            "EXTENSION",
+            ".blend"
+        ],
+        [
+            "FOLDER",
+            "POWERPOINT"
+        ],
+        [
+            "FOLDER",
+            "regextest"
+        ]
+    ],
+    "/AnewTest/Documents/WORD": [
+        [
+            "EXTENSION",
+            ".docx"
+        ],
+        [
+            "EXTENSION",
+            ".doc"
+        ]
+    ],
+    "/AnewTest/Documents/POWERPOINT": [
+        [
+            "EXTENSION",
+            ".pptx"
+        ]
+    ],
+    "/AnewTest/Documents/regextest": [
+        [
+            "REGULAR_EXPRESSION",
+            "VR-AR-MR"
+        ]
+    ],
+    "/AnewTest/Files": [
+        [
+            "EXTENSION",
+            ".exe"
+        ],
+        [
+            "FOLDER",
+            "Zips"
+        ],
+        [
+            "FOLDER",
+            "Images"
+        ]
+    ],
+    "/AnewTest/Files/Zips": [
+        [
+            "EXTENSION",
+            ".zip"
+        ]
+    ],
+    "/AnewTest/Files/Images": [
+        [
+            "EXTENSION",
+            ".png"
+        ]
+    ]
+}
