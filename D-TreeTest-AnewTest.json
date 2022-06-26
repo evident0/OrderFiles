@@ -35,6 +35,10 @@
         [
             "FOLDER",
             "regextest"
+        ],
+        [
+            "FOLDER",
+            "MSIINDOCS"
         ]
     ],
     "/AnewTest/Documents/WORD": [
@@ -83,6 +87,12 @@
         [
             "EXTENSION",
             ".png"
+        ]
+    ],
+    "/AnewTest/Documents/MSIINDOCS": [
+        [
+            "EXTENSION",
+            ".msi"
         ]
     ]
 }

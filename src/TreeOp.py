@@ -32,7 +32,7 @@ class TreeOp:
         #create a new json file im the os
 
         self.tree_config[os_path] = [] #create new empty dictionary entry
-        #TODO replace / with - and \\ with -
+
         new_json_file_name = self.json_file_string(tree_path_to_root, root_name)
     
         self.write_json(new_json_file_name, {}) # create new json file and initialize with {}

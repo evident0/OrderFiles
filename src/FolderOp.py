@@ -3,18 +3,15 @@ import shutil
 import copy
 import send2trash
 import json
-from pathlib import Path#mkdir
+from pathlib import Path
+from defines import *
 #from Order import extensions, regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
 #import Order
 #TODO: add a / in front of ROOT to behave like other folders
 class FolderOp:
     #class initilize with regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
     def __init__(self,path_to_root,json_file_to_read,root):# path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
-        
-        self.EXTENSION = "EXTENSION"
-        self.FOLDER = "FOLDER"
-        self.REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
-
+    
         self.path_to_root = path_to_root
         self.root = root
         self.json_file = json_file_to_read
@@ -78,15 +75,15 @@ class FolderOp:
     
         for value in self.config[path]: #  dict value is a list of lists [value[0]:type, value[1]:name]
             os_path = path.split("/") # we need to split because for windows: \\, for linux: / we will join them later based on the os
-            if value[0] == self.FOLDER:
+            if value[0] == FOLDER:
                 #create a file if it doesn't exist already
                 # the * ensures to pass the list as arguments
                 if not os.path.exists(os.path.join(self.path_to_root,*os_path, value[1])):
                     os.makedirs(os.path.join(self.path_to_root, *os_path, value[1]))   
                 self.dfs_helper(path+'/'+value[1]) # this is for the dictionary, notice no os.path.join
-            elif value[0] == self.EXTENSION: # regex or extension
+            elif value[0] == EXTENSION: # regex or extension
                 self.extensions[value[1]] = os.path.join(self.path_to_root,*os_path) # the path to the folder
-            elif value[0] == self.REGULAR_EXPRESSION:
+            elif value[0] == REGULAR_EXPRESSION:
                 self.regex[value[1]] = os.path.join(self.path_to_root,*os_path) # this will be traversed first to match any regex
             else:
                 print("Error: unknown type")
@@ -125,9 +122,9 @@ class FolderOp:
         #UNHIDE THIS
         ####os.rename(os_parent_dir,os_new_parent_dir)#os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
         
-        temp_dictionary[parent_dir].remove([self.FOLDER,current_folder])
+        temp_dictionary[parent_dir].remove([FOLDER,current_folder])
 
-        temp_dictionary[new_parent_directory].append([self.FOLDER, new_folder]) # add new folder to new parent directory
+        temp_dictionary[new_parent_directory].append([FOLDER, new_folder]) # add new folder to new parent directory
     
         self.move_dfs(temp_dictionary, parent_dir+"/"+current_folder, new_parent_directory+"/"+new_folder);
 
@@ -147,12 +144,12 @@ class FolderOp:
         os_path = os.path.join(self.path_to_root,*new_name.split('/'))
 
         for value in dictionary[new_name]:
-            if value[0] == self.FOLDER:
+            if value[0] == FOLDER:
                 self.move_dfs(dictionary, current_name+'/'+value[1], new_name+'/'+value[1])
                 #dictionary[new_name+"/"+value[1]] = dictionary.pop(current_name+"/"+value[1])
-            elif value[0] == self.EXTENSION: # regex or extension
+            elif value[0] == EXTENSION: # regex or extension
                 self.extensions[value[1]] = os.path.join(self.path_to_root,os_path) # the path to the folder
-            elif value[0] == self.REGULAR_EXPRESSION:
+            elif value[0] == REGULAR_EXPRESSION:
                 self.regex[value[1]] = os.path.join(self.path_to_root,os_path) # this will be traversed first to match any regex
             else:
                 print("Error: unknown type")
@@ -176,7 +173,7 @@ class FolderOp:
 
         temp_dictionary = copy.deepcopy(self.config)
         if parent_dir != "": # fast fix for root directory
-            temp_dictionary[parent_dir].remove([self.FOLDER,current_folder])
+            temp_dictionary[parent_dir].remove([FOLDER,current_folder])
 
         self.remove_dfs(temp_dictionary, parent_dir+"/"+current_folder)
 
@@ -191,11 +188,11 @@ class FolderOp:
     def remove_dfs(self,dictionary, current_name):
     
         for value in dictionary[current_name]:
-            if value[0] == self.FOLDER:
+            if value[0] == FOLDER:
                 self.remove_dfs(dictionary, current_name+'/'+value[1])
-            elif value[0] == self.EXTENSION: # regex or extension
+            elif value[0] == EXTENSION: # regex or extension
                 self.extensions.pop(value[1]) # remove the entry from the extensions
-            elif value[0] == self.REGULAR_EXPRESSION:
+            elif value[0] == REGULAR_EXPRESSION:
                 self.regex.pop(value[1]) # remove the entry in regex
         
         dictionary.pop(current_name)
@@ -217,34 +214,34 @@ class FolderOp:
         os_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
 
         #add the new folder to the parent directory for reference
-        temp_dictionary[parent_dir].append([self.FOLDER, current_folder])
+        temp_dictionary[parent_dir].append([FOLDER, current_folder])
 
         #create the empty folder in the dictionary
         temp_dictionary[parent_dir+"/"+current_folder] = []
 
         #for each item in the list of lists, add it to the dictionary
         for value in list_of_lists:
-            if value[0] == self.FOLDER:
-                if [self.FOLDER,value[0]] in temp_dictionary[parent_dir+"/"+current_folder]:
+            if value[0] == FOLDER:
+                if [FOLDER,value[0]] in temp_dictionary[parent_dir+"/"+current_folder]:
                     print("ERROR: folder "+ value[1]+" already exists in "+parent_dir+'/'+current_folder)
                     return
                 #add the folder under the new folder
-                temp_dictionary[parent_dir+"/"+current_folder].append([self.FOLDER, value[1]])
+                temp_dictionary[parent_dir+"/"+current_folder].append([FOLDER, value[1]])
                 #create the empty folder entry for the dictionary
                 temp_dictionary[parent_dir+"/"+current_folder+"/"+value[1]] = []               
-            elif value[0] == self.EXTENSION:
+            elif value[0] == EXTENSION:
                 if value[1] in self.extensions:
                     print("ERROR: extension "+ value[1]+" already exists in folder: "+self.extensions[list[1]])
                     return
                 #add the extension to the dictionary list of the new folder
-                temp_dictionary[parent_dir+"/"+current_folder].append([self.EXTENSION, value[1]])
+                temp_dictionary[parent_dir+"/"+current_folder].append([EXTENSION, value[1]])
                 self.extensions[value[1]] = os.path.join(self.path_to_root,os_dir)
-            elif value[0] == self.REGULAR_EXPRESSION:
+            elif value[0] == REGULAR_EXPRESSION:
                 if value[1] in self.regex:
                     print("ERROR: regex "+ value[1]+" already exists in folder: "+self.regex[list[1]])
                     return
                 #add the regex to the dictionary list of the new folder
-                temp_dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, value[1]])
+                temp_dictionary[parent_dir+"/"+current_folder].append([REGULAR_EXPRESSION, value[1]])
                 self.regex[value[1]] = os.path.join(self.path_to_root,os_dir)
             else:
                 print("ERROR: unknown type")
@@ -253,7 +250,7 @@ class FolderOp:
             os.makedirs(os_dir, exist_ok=True)
             #create the folers if the dictionary updates successfully
             for value in list_of_lists:
-                if value[0] == self.FOLDER:
+                if value[0] == FOLDER:
                     os.makedirs(os.path.join(os_dir,value[1]), exist_ok=True)
 
             self.write_json(self.json_file, temp_dictionary)
@@ -278,33 +275,33 @@ class FolderOp:
 
         temp_dictionary = copy.deepcopy(self.config) #TODO: instead of doing this read the json again
         
-        if list[0] == self.FOLDER:
+        if list[0] == FOLDER:
             #search the list in the dictionary entry if it didn't find a folder with the same name then append it
-            if [self.FOLDER, list[1]] not in temp_dictionary[parent_dir+'/'+current_folder]:
-                temp_dictionary[parent_dir+'/'+current_folder].append([self.FOLDER, list[1]])
+            if [FOLDER, list[1]] not in temp_dictionary[parent_dir+'/'+current_folder]:
+                temp_dictionary[parent_dir+'/'+current_folder].append([FOLDER, list[1]])
                 temp_dictionary[parent_dir+"/"+current_folder+"/"+list[1]] = []
             else:#TODO: check this condition first
                 print("ERROR: folder "+ list[1]+" already exists in "+parent_dir+'/'+current_folder)
                 return
-        elif list[0] == self.EXTENSION:
+        elif list[0] == EXTENSION:
             if list[1] in self.extensions:
                 print("ERROR: extension "+ list[1]+" already exists in folder: "+self.extensions[list[1]])
                 return
             else:#TODO: else not necessary
-                temp_dictionary[parent_dir+"/"+current_folder].append([self.EXTENSION, list[1]])
+                temp_dictionary[parent_dir+"/"+current_folder].append([EXTENSION, list[1]])
                 self.extensions[list[1]] = os.path.join(self.path_to_root,os_dir)
-        elif list[0] == self.REGULAR_EXPRESSION:
+        elif list[0] == REGULAR_EXPRESSION:
             if list[1] in self.regex:
                 print("ERROR: regex "+ list[1]+" already exists in folder: "+self.regex[list[1]])
                 return
             else:
-                temp_dictionary[parent_dir+"/"+current_folder].append([self.REGULAR_EXPRESSION, list[1]])
+                temp_dictionary[parent_dir+"/"+current_folder].append([REGULAR_EXPRESSION, list[1]])
                 self.regex[list[1]] = os.path.join(self.path_to_root,os_dir)
         else:
             print(f"ERROR: unknown type {list[0]}")
             return
         try:
-            if list[0] == self.FOLDER:
+            if list[0] == FOLDER:
                 os.makedirs(os.path.join(os_dir,list[1]))
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
@@ -335,28 +332,28 @@ class FolderOp:
         temp_dictionary = copy.deepcopy(self.config)
 
         for value in list_of_lists:
-            if value[0] == self.FOLDER:
+            if value[0] == FOLDER:
                 print("FOLDER rule detected if you want to remove a folder (send it to trash) use remove_folder")
                 print("skipping...")
                 continue
-            elif value[0] == self.EXTENSION:
+            elif value[0] == EXTENSION:
                 if value[1] not in self.extensions:
                     print(f"ERROR: extension {value[1]} doesnt exist in extension list")
                     return
                 else:
                     try:
-                        temp_dictionary[parent_dir+"/"+current_folder].remove([self.EXTENSION, value[1]])
+                        temp_dictionary[parent_dir+"/"+current_folder].remove([EXTENSION, value[1]])
                     except ValueError:
                         print(f"ERROR: could not remove extension {value[1]} (doesn't exist in folder)")
                         return
                     del self.extensions[value[1]]
-            elif value[0] == self.REGULAR_EXPRESSION:
+            elif value[0] == REGULAR_EXPRESSION:
                 if value[1] not in self.regex:
                     print(f"ERROR: regex {value[1]} doesnt exist in regex list")
                     return
                 else:
                     try:
-                        temp_dictionary[parent_dir+"/"+current_folder].remove([self.REGULAR_EXPRESSION, value[1]])
+                        temp_dictionary[parent_dir+"/"+current_folder].remove([REGULAR_EXPRESSION, value[1]])
                     except ValueError:
                         print(f"ERROR: could not remove regex {value[1]} (doesn't exist in folder)")
                         return

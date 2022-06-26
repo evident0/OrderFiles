@@ -4,9 +4,7 @@ import ast #literal_eval of input argument for touching folders
 from colorama import *
 from FolderOp import *
 from TreeOp import *
-EXTENSION = "EXTENSION"
-FOLDER = "FOLDER"
-REGULAR_EXPRESSION = "REGULAR_EXPRESSION"
+from defines import * # defines for extensions, folders, regex_expression
 
 from pathlib import Path
 # prefix components:
@@ -17,102 +15,14 @@ tee =    '├── '
 last =   '└── '
 class CommandLineInterface:
     def __init__(self) -> None:
-        self.folder_op = None #TODO multiple of these somewhere else not in this class
-        self.tree_op = TreeOp() #initialize tree_op
-        self.tree_selected = ""
-        self.dict = {
-            "/Root": [
-                [
-                    "FOLDER",
-                    "Images"
-                ],
-                [
-                    "FOLDER",
-                    "Documents"
-                ],
-                [
-                    "FOLDER",
-                    "inRoot"
-                ]
-            ],
-            "/Root/Images": [
-                [
-                    "EXTENSION",
-                    ".png"
-                ],
-                [
-                    "EXTENSION",
-                    ".tiff"
-                ],
-                [
-                    "EXTENSION",
-                    ".jpg"
-                ],
-                [
-                    "REGULAR_EXPRESSION",
-                    "^The.*Spain"
-                ]
-            ],
-            "/Root/Documents": [
-                [
-                    "FOLDER",
-                    "DOCX"
-                ],
-                [
-                    "FOLDER",
-                    "WORD"
-                ],
-                [
-                    "FOLDER",
-                    "PDF"
-                ]
-            ],
-            "/Root/Documents/DOCX": [
-                [
-                    "EXTENSION",
-                    ".docx"
-                ]
-            ],
-            "/Root/Documents/WORD": [
-                [
-                    "EXTENSION",
-                    ".doc"
-                ]
-            ],
-            "/Root/inRoot": [],
-            "/Root/Documents/PDF": [
-                [
-                    "EXTENSION",
-                    ".pdf"
-                ],
-                [
-                    "EXTENSION",
-                    ".adobe"
-                ],
-                [
-                    "REGULAR_EXPRESSION",
-                    "([a-z]*) are ([a-z]*?) .*"
-                ],
-                [
-                    "FOLDER",
-                    "hello"
-                ],
-                [
-                    "EXTENSION",
-                    ".pdfnew"
-                ],
-                [
-                    "REGULAR_EXPRESSION",
-                    ".*"
-                ]
-            ],
-            "/Root/Documents/PDF/hello": []
-        }
+        self.folder_op = None # the instance of FolderOp, for simplicity only one folder_op is used at a time
+        self.tree_op = TreeOp() # initialize tree_op see the class for more details
+        self.tree_selected = "" # used in the cli to keep track of the selected tree
     def select_tree(self):
 
-        a_list = self.tree_op.get_tree_list() #DONE
-        # a selection screen for the a_list
+        a_list = self.tree_op.get_tree_list()
         
+        # a selection screen for the a_list
         number = 0
         for item in a_list:
             print(f"{number}. {item}")
@@ -154,6 +64,7 @@ class CommandLineInterface:
         print()
         print('create </folder_name> create a tree structure with root </folder_name>')
         print('select - select a tree')
+        print('exit, exit the program')
         print()
         print(Back.LIGHTWHITE_EX + Fore.BLACK +'-----------------------Tree specific commands:-----------------------' + Style.RESET_ALL)
         print('--------------------(need to select a tree first)--------------------')
@@ -206,8 +117,6 @@ class CommandLineInterface:
                     print('<rules> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
                     return False
                 
-
-                #self.folder_op.make_folder(arguments[0],arguments[1:])
                 print("making...")
                 self.folder_op.touch_folder(parent_path, folder_name, rule_list)
                 self.print_tree()
@@ -235,7 +144,6 @@ class CommandLineInterface:
                     print('<rules> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
                     return False
                 
-                #self.folder_op.make_folder(arguments[0],arguments[1:])
                 print("making...")
                 self.folder_op.remove_folder_rules(parent_path, folder_name, rule_list)
                 self.print_tree()
@@ -253,7 +161,6 @@ class CommandLineInterface:
                     return False
                 #do the rm command
                 self.folder_op.remove_folder(parent_path,folder_name)
-                ##self.folder_op.remove_folder(parent_path, folder_name)
                 print("removing...")
                 self.print_tree()
                 return True
@@ -271,10 +178,8 @@ class CommandLineInterface:
                     print('<folder_name> is a relative path ex. /Root/Documents/PDF')
                     return False
                 #do the mv command
-
                 print (f"ppath {parent_path},pname {folder_name}, nppath{new_parent_path}, npname{new_folder_name}")
                 self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
-                #self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
                 print("moving...")
                 self.print_tree()
                 return True
@@ -285,7 +190,6 @@ class CommandLineInterface:
             else:
                 #do the scanner command
                 self.tree_op.add_scanable_folder(self.folder_op, arguments[0])
-                #self.folder_op.append_rules_to_folder(parent_path,folder_name,[["FOLDER","ininRoot"],["EXTENSION",".inroot"]])
                 return True
         elif command == 'scanrm':
             if arguments_size < 1:
@@ -294,7 +198,6 @@ class CommandLineInterface:
             else:
                 #do the scanrm command
                 self.tree_op.remove_scanable_folder(self.folder_op, arguments[0])
-                #self.folder_op.append_rules_to_folder(parent_path,folder_name,[["FOLDER","ininRoot"],["EXTENSION",".inroot"]])
                 return True
         elif command == 'scaninf':
             #display all the folders scanned when ordering
@@ -324,37 +227,11 @@ class CommandLineInterface:
         #split input into command and arguments
         command = input.split(' ')[0]
         arguments = input.split(' ')[1:]
-        #check if command is valid
-        parent_path = ""
-        folder_name = ""
-        new_parent_path = ""
-        new_folder_name = ""
-        '''if len(arguments) >= 1:
-            try:
-                parent_path = arguments[0].rsplit('/',1)[0]
-                folder_name = arguments[0].rsplit('/',1)[1]
-            except IndexError:
-                print('<folder_name> is a relative path ex. /Root/Documents/PDF')
-                return False
-
-        if len(arguments) >= 2:
-            try:
-                new_parent_path = arguments[1].rsplit('/',1)[0]
-                new_folder_name = arguments[1].rsplit('/',1)[1]
-            except IndexError:
-                print('<new_folder_name> is a relative path ex. /Root/Documents/PDF')
-                return False'''
-
-        
-        if command == 'scan':#TODO change to add scan
-            if len(arguments) < 1:
-                print('scan <folder_name>, add a folder to scan and move the files')
-                return False
-            else:
-                #do the scan command
-                
-                return True
-        elif command == 'create':#TODO create the files in os for now just reads them
+      
+        if command == 'exit':
+            #exit the program
+            exit()
+        if command == 'create':#TODO create the files in os for now just reads them
             if len(arguments) < 1:
                 print('create <folder_path> create a tree structure with root </folder_name>')
                 return False
@@ -365,12 +242,9 @@ class CommandLineInterface:
                 except IndexError:
                     print('<folder_name> is a relative path ex. /Root/Documents/PDF')
                     return False
-                #IMPORTANT TODO: it doesn't need slash ("Root" not "/Root")
+                #IMPORTANT NOTE: it doesn't need slash ("Root" not "/Root")
                 self.tree_op.create_new_tree(dir_name, base_name) 
-                #do the create command
-                #self.folder_op = FolderOp("D:\TreeTest", 'config_output.json', arguments[0])#TODO ROOT has been selected from a previous menu
                 print("creating...")
-                #self.print_tree() should not print as there is no tree yet
                 return True
         elif command == 'select':
             self.tree_selected = self.select_tree()
@@ -400,22 +274,10 @@ if __name__ == '__main__':
     command_line = CommandLineInterface()
     while True:
        
-        #print()
-        #print('-h: Display help menu')
-        #print(Fore.YELLOW+'C:/TreeTest'+Style.RESET_ALL+'> ', end='')#TODO get path_to_root
         usr_input = input(f"{Fore.YELLOW}{command_line.tree_selected}{Style.RESET_ALL}> ")
 
         if usr_input == 'help':
             command_line.dispay_help()
         else:
             command_line.match_input(usr_input)
-        #print('Invalid command type "help" for help')
-
-        #command_line.tree_selected = command_line.select_tree()
-        #print('C:/TreeTest> ', end='')
-        
-        #dispay_help()
-        #for line in tree(Path('Root')):
-        #    print(line)
-        #print("\033[31mThis is red font.\033[0m")
     
