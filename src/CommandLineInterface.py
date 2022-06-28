@@ -85,7 +85,7 @@ class CommandLineInterface:
             print(Back.RED+Fore.WHITE+"Tree selection failed"+Style.RESET_ALL)
             return
         tree_empty = True
-        for line in command_line.tree_dict(self.folder_op.config, self.folder_op.root):#TODO self.folder_op
+        for line in command_line.tree_dict(self.folder_op.config, self.folder_op.root):
             print(line)
             tree_empty = False
         if tree_empty:
@@ -117,9 +117,10 @@ class CommandLineInterface:
                     print('<rules> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
                     return False
                 
-                print("making...")
+                #print("making...")
+                #TODO return something if it succeeds
                 self.folder_op.touch_folder(parent_path, folder_name, rule_list)
-                self.print_tree()
+                #self.print_tree()
                 return True
         if command == 'rr':
             if arguments_size < 2:
@@ -138,15 +139,16 @@ class CommandLineInterface:
                     rule_list = ast.literal_eval(arguments[1])
                     #check if rule_list is a list of lists
                     if not isinstance(rule_list, list) or not (isinstance(el, list) for el in rule_list):
-                        print('<ruless> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
+                        print('<rules> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
                         return False
                 except SyntaxError:
                     print('<rules> is not a valid list ex. [[FOLDER,<name>],[EXTENSION,<name>],[REGULAR_EXPRESSION,<name>]]')
                     return False
                 
-                print("making...")
+                #print("making...")
+                #TODO return something if it succeeds
                 self.folder_op.remove_folder_rules(parent_path, folder_name, rule_list)
-                self.print_tree()
+                #self.print_tree()
                 return True
         elif command == 'rm':
             if arguments_size < 1:
@@ -160,9 +162,10 @@ class CommandLineInterface:
                     print('<folder_name> is a relative path ex. /Root/Documents/PDF')
                     return False
                 #do the rm command
+                #TODO return something if it succeeds
                 self.folder_op.remove_folder(parent_path,folder_name)
-                print("removing...")
-                self.print_tree()
+                #print("removing...")
+                #self.print_tree()
                 return True
         elif command == 'mv':
             if arguments_size < 2:
@@ -178,10 +181,11 @@ class CommandLineInterface:
                     print('<folder_name> is a relative path ex. /Root/Documents/PDF')
                     return False
                 #do the mv command
-                print (f"ppath {parent_path},pname {folder_name}, nppath{new_parent_path}, npname{new_folder_name}")
+                #print (f"ppath {parent_path},pname {folder_name}, nppath{new_parent_path}, npname{new_folder_name}")
+                #TODO return something if it succeeds
                 self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
-                print("moving...")
-                self.print_tree()
+                #print("moving...")
+                #self.print_tree()
                 return True
         elif command == 'scanner':
             if arguments_size < 1:
@@ -213,8 +217,10 @@ class CommandLineInterface:
         elif command == 'order':
           
             #do the order command
-            self.tree_op.order_files(self.folder_op)
             print("ordering...")
+            #TODO return something if it succeeds
+            self.tree_op.order_files(self.folder_op)
+            print(Fore.GREEN+"Done"+Style.RESET_ALL)
 
             return True
         elif command == 'tree':
@@ -231,7 +237,7 @@ class CommandLineInterface:
         if command == 'exit':
             #exit the program
             exit()
-        if command == 'create':#TODO create the files in os for now just reads them
+        if command == 'create':
             if len(arguments) < 1:
                 print('create <folder_path> create a tree structure with root </folder_name>')
                 return False
@@ -243,8 +249,9 @@ class CommandLineInterface:
                     print('<folder_name> is a relative path ex. /Root/Documents/PDF')
                     return False
                 #IMPORTANT NOTE: it doesn't need slash ("Root" not "/Root")
+                #TODO return something if it succeeds
                 self.tree_op.create_new_tree(dir_name, base_name) 
-                print("creating...")
+                #print("creating...")
                 return True
         elif command == 'select':
             self.tree_selected = self.select_tree()

@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from defines import *
 from Error import *
-
+#NOTE An idea: merge directories and rules
 class FolderOp:
     #class initilize with regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
     def __init__(self,path_to_root,json_file_to_read,root):# path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
@@ -116,7 +116,7 @@ class FolderOp:
         #TODO create the folders on the way down
         if new_parent_directory not in self.config:
             print_err("ERROR: "+ new_parent_directory +" does not exist in dictionary, this method doesn't create the path")
-            return
+            return #TODO new_parent_directory can be the empty string
         
         temp_dictionary[parent_dir].remove([FOLDER,current_folder])
 
@@ -129,7 +129,7 @@ class FolderOp:
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
         except Exception as e:
-            print_err("OS MOVE FAILED REVERTING CHANGES "+ e)
+            print_err("OS MOVE FAILED REVERTING CHANGES "+ str(e))
             self.dfs(self.root)
 
 
@@ -178,7 +178,7 @@ class FolderOp:
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary    
         except Exception as e:
-            print_err("OS REMOVE FAILED REVERTING CHANGES "+ e)
+            print_err("OS REMOVE FAILED REVERTING CHANGES "+ str(e))
             self.dfs(self.root)
 
     def remove_dfs(self,dictionary, current_name):
@@ -252,7 +252,7 @@ class FolderOp:
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
         except Exception as e:
-            print_err("ERROR: could not create folder reverting changes..." + e)
+            print_err("ERROR: could not create folder reverting changes..." + str(e))
             self.dfs(self.root)
     def append_to_folder(self, parent_dir, current_folder, list):
 
@@ -301,7 +301,7 @@ class FolderOp:
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
         except Exception as e:
-            print_err("ERROR: could not append changes reverting..." + e)
+            print_err("ERROR: could not append changes reverting..." + str(e))
     
     def append_rules_to_folder(self, parent_dir, current_folder, list_of_lists):
         for list in list_of_lists:
@@ -358,7 +358,7 @@ class FolderOp:
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
         except Exception as e:
-            print_err("ERROR write to json failed: could not remove changes, reverting..." + e)
+            print_err("ERROR write to json failed: could not remove changes, reverting..." + str(e))
             self.dfs(self.root) # entensions and regex dictionaries might have changed but write failed (regenerate the dictionaries)
 
 

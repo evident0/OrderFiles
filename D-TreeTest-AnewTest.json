@@ -7,13 +7,13 @@
         [
             "FOLDER",
             "Files"
+        ],
+        [
+            "FOLDER",
+            "afld"
         ]
     ],
     "/AnewTest/Documents": [
-        [
-            "FOLDER",
-            "WORD"
-        ],
         [
             "EXTENSION",
             ".blend"
@@ -29,16 +29,10 @@
         [
             "FOLDER",
             "PDF"
-        ]
-    ],
-    "/AnewTest/Documents/WORD": [
-        [
-            "EXTENSION",
-            ".docx"
         ],
         [
-            "EXTENSION",
-            ".doc"
+            "FOLDER",
+            "WORD"
         ]
     ],
     "/AnewTest/Documents/POWERPOINT": [
@@ -94,5 +88,21 @@
             "EXTENSION",
             ".pdf"
         ]
-    ]
+    ],
+    "/AnewTest/Documents/WORD": [
+        [
+            "EXTENSION",
+            ".docx"
+        ],
+        [
+            "EXTENSION",
+            ".doc"
+        ],
+        [
+            "FOLDER",
+            "morestuff"
+        ]
+    ],
+    "/AnewTest/Documents/WORD/morestuff": [],
+    "/AnewTest/afld": []
 }

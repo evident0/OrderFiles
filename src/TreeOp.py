@@ -4,6 +4,7 @@ import os
 from FolderOp import *
 from defines import *
 from Scan import *
+from Error import *
 class TreeOp:
     def __init__(self): 
         self.folder_op_list = []     
@@ -15,7 +16,7 @@ class TreeOp:
                     path_to_root = os.path.dirname(tree)
                     root = os.path.basename(tree)
                     json_file_name = self.json_file_string(path_to_root, root)
-                    self.folder_op_list.append(FolderOp(path_to_root, json_file_name , '/'+root)) #TODO root has a slash fix this
+                    self.folder_op_list.append(FolderOp(path_to_root, json_file_name , '/'+root)) # slash needed because not given by user
                     print(f"Loaded tree {tree} /{root} from json file {json_file_name}")
         except:
             self.tree_config = {}
@@ -24,10 +25,10 @@ class TreeOp:
     def create_new_tree(self, tree_path_to_root, root_name):
         os_path = os.path.join(tree_path_to_root , root_name)
         if not os.path.isdir(tree_path_to_root):
-            print("Parent directory of tree must be a valid os directory")
+            print_err("Parent directory of tree must be a valid os directory")
             return
         if os_path in self.tree_config:
-            print("Tree already exists")
+            print_err("Tree already exists")
             return
         #create a new json file im the os
 
@@ -48,7 +49,7 @@ class TreeOp:
     def remove_tree(self, tree_path_to_root, root_name):
         os_path = os.path.join(tree_path_to_root , root_name)
         if os_path not in self.tree_config:
-            print("Tree does not exist")
+            print_err("Tree does not exist")
             return
         del self.tree_config[tree_path_to_root + "-" + root_name]
         self.write_json("treeConfig.json", self.tree_config)#we don't have to remove folderop config
@@ -56,7 +57,7 @@ class TreeOp:
     def select_tree(self, tree_path_to_root, root_name):
         folder_op = self.find_folder_op(tree_path_to_root, root_name)
         if folder_op == None:
-            print("Tree does not exist")
+            print_err("Tree does not exist")
             return None
         return folder_op
        
@@ -64,7 +65,7 @@ class TreeOp:
     #find the folderop object that corresponds to the tree
     def find_folder_op(self, tree_path_to_root, root_name):
         for folder_op in self.folder_op_list:
-            if folder_op.path_to_root == tree_path_to_root and folder_op.root == '/'+root_name:#TODO HAS shash /
+            if folder_op.path_to_root == tree_path_to_root and folder_op.root == '/'+root_name:# / hiden from user
                 return folder_op
         return None
         
@@ -75,15 +76,19 @@ class TreeOp:
             return 
         path_to_root = folder_op.path_to_root
         root = folder_op.root
-        tree_config_entry_name = os.path.join(path_to_root, root.replace("/", ""))#one / at the start most be removed
+        tree_config_entry_name = os.path.join(path_to_root, root.replace("/", ""))#one / at the start must be removed
         #check folder_to_scan is not already in the tree config
         if folder_to_scan in self.tree_config[tree_config_entry_name]:
             print(f"Folder already in the tree config for entry {tree_config_entry_name} returning...")
             return
     
-        self.tree_config[tree_config_entry_name].append(folder_to_scan)#TODO if write fails below this will remain in memory
-
-        self.write_json("treeConfig.json", self.tree_config)
+        self.tree_config[tree_config_entry_name].append(folder_to_scan)
+        try:
+            self.write_json("treeConfig.json", self.tree_config)
+        except Exception as e:
+            print_err("Failed to write to tree config file" + str(e))
+            self.tree_config[tree_config_entry_name].remove(folder_to_scan) # revert change
+            return
 
     def remove_scanable_folder(self, folder_op, folder_to_remove):
         if not os.path.isdir(folder_to_remove):
@@ -93,10 +98,14 @@ class TreeOp:
         root = folder_op.root
         tree_config_entry_name = os.path.join(path_to_root, root.replace("/", ""))
         if folder_to_remove not in self.tree_config[tree_config_entry_name]:
-            print(f"Folder {folder_to_remove} not in the tree config for entry {tree_config_entry_name}, type scaninf, returning...")
+            print_err(f"Folder {folder_to_remove} not in the tree config for entry {tree_config_entry_name}, type scaninf, returning...")
             return
-        self.tree_config[tree_config_entry_name].remove(folder_to_remove)#TODO if write fails below this will remain in memory
-        self.write_json("treeConfig.json", self.tree_config)
+        self.tree_config[tree_config_entry_name].remove(folder_to_remove)
+        try:
+            self.write_json("treeConfig.json", self.tree_config)
+        except Exception as e:
+            print_err("Failed to write to tree config file" + str(e))
+            self.tree_config[tree_config_entry_name].append(folder_to_remove) # revert change
 
     def order_files(self, folder_op):
         #TODO DO NOT CREATE AND DELETE A SCANNER
@@ -118,7 +127,7 @@ class TreeOp:
         root = folder_op.root
         tree_config_entry_name = os.path.join(path_to_root, root.replace("/", ""))
         if tree_config_entry_name not in self.tree_config:
-            print("ERROR Tree does not exist")
+            print_err("ERROR Tree does not exist")
             return None
         return self.tree_config[tree_config_entry_name]
         
