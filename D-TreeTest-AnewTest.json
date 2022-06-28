@@ -7,10 +7,6 @@
         [
             "FOLDER",
             "Files"
-        ],
-        [
-            "FOLDER",
-            "afld"
         ]
     ],
     "/AnewTest/Documents": [
@@ -103,6 +99,5 @@
             "morestuff"
         ]
     ],
-    "/AnewTest/Documents/WORD/morestuff": [],
-    "/AnewTest/afld": []
+    "/AnewTest/Documents/WORD/morestuff": []
 }
