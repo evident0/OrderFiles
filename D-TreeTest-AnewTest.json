@@ -59,6 +59,10 @@
         [
             "FOLDER",
             "MSII"
+        ],
+        [
+            "FOLDER",
+            "morefiles"
         ]
     ],
     "/AnewTest/Files/Zips": [
@@ -99,5 +103,21 @@
             "morestuff"
         ]
     ],
-    "/AnewTest/Documents/WORD/morestuff": []
+    "/AnewTest/Documents/WORD/morestuff": [],
+    "/AnewTest/Files/morefiles": [
+        [
+            "EXTENSION",
+            ".bat"
+        ],
+        [
+            "FOLDER",
+            "text"
+        ]
+    ],
+    "/AnewTest/Files/morefiles/text": [
+        [
+            "EXTENSION",
+            ".txt"
+        ]
+    ]
 }

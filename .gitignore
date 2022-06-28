@@ -1,3 +1,4 @@
 Root/
 __pycache__/
 test/
+.venv/
