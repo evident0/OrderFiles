@@ -5,9 +5,8 @@ import send2trash
 import json
 from pathlib import Path
 from defines import *
-#from Order import extensions, regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
-#import Order
-#TODO: add a / in front of ROOT to behave like other folders
+from Error import *
+
 class FolderOp:
     #class initilize with regex, config, EXTENSION, FOLDER, REGULAR_EXPRESSION
     def __init__(self,path_to_root,json_file_to_read,root):# path_to_root, regex, config, extensions, EXTENSION, FOLDER, REGULAR_EXPRESSION):
@@ -22,9 +21,9 @@ class FolderOp:
             print("json is empty, creating new empty config")
             self.config = {}
         except FileNotFoundError:
-            print("File not found error")
+            print_err("json File not found error")
         except PermissionError:
-            print("File permission denied")
+            print_err("json File permission denied")
         
         self.regex = {}
         self.extensions = {}
@@ -34,7 +33,7 @@ class FolderOp:
             first_key_is_root = next(iter(self.config))
             self.dfs(str(first_key_is_root))
         else:
-            print("Error: config is empty")
+            print("Note: config is empty")
             print("creating a new root")
             self.config[root] = []
             first_key_is_root = next(iter(self.config))
@@ -42,7 +41,7 @@ class FolderOp:
             try:
                 self.write_json(json_file_to_read, self.config)
             except:
-                print("Error: could not write to json file")
+                print_err("Error: could not write to json file")
     
 
     def save_config(self):
@@ -86,41 +85,38 @@ class FolderOp:
             elif value[0] == REGULAR_EXPRESSION:
                 self.regex[value[1]] = os.path.join(self.path_to_root,*os_path) # this will be traversed first to match any regex
             else:
-                print("Error: unknown type")
+                print_err("Error: unknown type " + value[0])
 
     def move_folder(self, parent_dir, current_folder, new_parent_directory, new_folder):
-
+        
         #copy the dictionary to a new tempory dictionary
         temp_dictionary = copy.deepcopy(self.config) # the idea is to apply changes only if I/O operations succeed
 
-        #check if it is a folder
-        os_parent_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
-        os_new_parent_dir = os.path.join(self.path_to_root,*new_parent_directory.split('/'),new_folder)
+        os_path = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
+        os_new_path = os.path.join(self.path_to_root,*new_parent_directory.split('/'),new_folder)
+        
+        os_new_parent_dir = os.path.join(self.path_to_root,*new_parent_directory.split('/'))
 
-        print(os_parent_dir)
         #check if the folders exist
-        if os.path.isdir(os_parent_dir) is not True:
-            print("ERROR: "+ os_parent_dir+" is not a folder in the os")
+        if os.path.isdir(os_path) is not True:
+            print_err("ERROR: "+ os_path+" is not a folder in the os")
             return
-        #check if new directory is a subdirectory of the parent directory
-        #print("This is the thing1 "+os_parent_dir)
-        #print("This is the thing2 "+os_new_parent_dir)
-        #print("This is the thing3 "+os.path.commonpath([os_parent_dir, os_new_parent_dir]))
-        #changed from os.path.commonprefix that didn't work properly
-        if os.path.commonpath([os_parent_dir, os_new_parent_dir]) == os_parent_dir:      
-            print("ERROR: "+ os_new_parent_dir + " is a subdirectory of " + os_parent_dir)
+        #check for max recursion error
+        if os.path.commonpath([os_path, os_new_path]) == os_path:      
+            print_err("ERROR: "+ os_new_path + " is a subdirectory of " + os_path)
             return
         #check if the folder exists in dictionary
         if parent_dir+'/'+current_folder not in self.config:
-            print("ERROR: "+ parent_dir+'/'+current_folder +" does not exist in dictionary")
+            print_err("ERROR: "+ parent_dir+'/'+current_folder +" does not exist in dictionary")
+            return  
+        #TODO create the folders on the way down
+        if os.path.isdir(os_new_parent_dir) is not True:
+            print_err("ERROR: "+ os_new_path+" is not a folder in the os, this method doesn't create the path")
             return
-        #check if the new parent directory exists in dictionary
-        #if new_parent_directory+'/'+new_folder not in dictionary:
-        #    print("ERROR: "+ new_parent_directory+'/'+new_folder +" does not exist in dictionary")
-        #    return
-        # move a folder in the operating system
-        #UNHIDE THIS
-        ####os.rename(os_parent_dir,os_new_parent_dir)#os.path.join(parent_dir,current_folder), os.path.join(new_parent_directory,new_folder))
+        #TODO create the folders on the way down
+        if new_parent_directory not in self.config:
+            print_err("ERROR: "+ new_parent_directory +" does not exist in dictionary, this method doesn't create the path")
+            return
         
         temp_dictionary[parent_dir].remove([FOLDER,current_folder])
 
@@ -129,11 +125,11 @@ class FolderOp:
         self.move_dfs(temp_dictionary, parent_dir+"/"+current_folder, new_parent_directory+"/"+new_folder);
 
         try:
-            os.rename(os_parent_dir,os_new_parent_dir)
+            os.rename(os_path,os_new_path)
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
         except Exception as e:
-            print(f"OS MOVE FAILED REVERTING CHANGES {e}")
+            print_err("OS MOVE FAILED REVERTING CHANGES "+ e)
             self.dfs(self.root)
 
 
@@ -152,19 +148,19 @@ class FolderOp:
             elif value[0] == REGULAR_EXPRESSION:
                 self.regex[value[1]] = os.path.join(self.path_to_root,os_path) # this will be traversed first to match any regex
             else:
-                print("Error: unknown type")
+                print_err("Error: unknown type " + value[0])
 
     def remove_folder(self, parent_dir, current_folder):
         #check if folder is in os and return if not
         os_path = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
 
         if os.path.isdir(os_path) is not True:
-            print("ERROR: "+ os_path+" is not a folder in the os")
+            print_err("ERROR: "+ os_path + " is not a folder in the os")
             return self.config
 
         #check if it does not exist and return if it does not
         if parent_dir+'/'+current_folder not in self.config:
-            print("ERROR: "+ parent_dir+'/'+current_folder +"doesn't exist in dictionary")
+            print_err("ERROR: "+ parent_dir+'/'+current_folder +"doesn't exist in dictionary")
             return
         #remove folder from operating system
         ##os.rmdir(os.path.join(parent_dir,current_folder))
@@ -181,8 +177,8 @@ class FolderOp:
             send2trash.send2trash(os_path)
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary    
-        except:
-            print("OS REMOVE FAILED REVERTING CHANGES")
+        except Exception as e:
+            print_err("OS REMOVE FAILED REVERTING CHANGES "+ e)
             self.dfs(self.root)
 
     def remove_dfs(self,dictionary, current_name):
@@ -200,12 +196,12 @@ class FolderOp:
     def add_folder(self, parent_dir, current_folder, list_of_lists):
         #check if parent directory exists in os and return if it does not
         if os.path.isdir(os.path.join(self.path_to_root,*parent_dir.split('/'))) is not True:
-            print("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'))+" is not a folder in the os")
+            print_err("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'))+" is not a folder in the os")
             return
 
         #check if folder exists in dictionary and return if it does
         if parent_dir+'/'+current_folder in self.config:#TODO call append_rules if it exists instead of throwing an error
-            print("ERROR: "+ parent_dir+'/'+current_folder + " already exists")
+            print_err("ERROR: "+ parent_dir+'/'+current_folder + " already exists")
             return
 
         temp_dictionary = copy.deepcopy(self.config)
@@ -223,7 +219,7 @@ class FolderOp:
         for value in list_of_lists:
             if value[0] == FOLDER:
                 if [FOLDER,value[0]] in temp_dictionary[parent_dir+"/"+current_folder]:
-                    print("ERROR: folder "+ value[1]+" already exists in "+parent_dir+'/'+current_folder)
+                    print_err("ERROR: folder "+ value[1]+" already exists in "+parent_dir+'/'+current_folder)
                     return
                 #add the folder under the new folder
                 temp_dictionary[parent_dir+"/"+current_folder].append([FOLDER, value[1]])
@@ -231,20 +227,20 @@ class FolderOp:
                 temp_dictionary[parent_dir+"/"+current_folder+"/"+value[1]] = []               
             elif value[0] == EXTENSION:
                 if value[1] in self.extensions:
-                    print("ERROR: extension "+ value[1]+" already exists in folder: "+self.extensions[list[1]])
+                    print_err("ERROR: extension "+ value[1]+" already exists in folder: "+self.extensions[list[1]])
                     return
                 #add the extension to the dictionary list of the new folder
                 temp_dictionary[parent_dir+"/"+current_folder].append([EXTENSION, value[1]])
                 self.extensions[value[1]] = os.path.join(self.path_to_root,os_dir)
             elif value[0] == REGULAR_EXPRESSION:
                 if value[1] in self.regex:
-                    print("ERROR: regex "+ value[1]+" already exists in folder: "+self.regex[list[1]])
+                    print_err("ERROR: regex "+ value[1]+" already exists in folder: "+self.regex[list[1]])
                     return
                 #add the regex to the dictionary list of the new folder
                 temp_dictionary[parent_dir+"/"+current_folder].append([REGULAR_EXPRESSION, value[1]])
                 self.regex[value[1]] = os.path.join(self.path_to_root,os_dir)
             else:
-                print("ERROR: unknown type")
+                print_err("ERROR: unknown type "+ value[0])
         
         try:
             os.makedirs(os_dir, exist_ok=True)
@@ -255,9 +251,8 @@ class FolderOp:
 
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
-        except:
-            print("ERROR: could not create folder reverting changes...")
-            #TODO: add a revert function and use the root the user specified in main
+        except Exception as e:
+            print_err("ERROR: could not create folder reverting changes..." + e)
             self.dfs(self.root)
     def append_to_folder(self, parent_dir, current_folder, list):
 
@@ -265,15 +260,15 @@ class FolderOp:
         print(os_dir)
         #check if folder exists in os and return if it does not
         if os.path.isdir(os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)) is not True:
-            print("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)+" is not a folder in the os")
+            print_err("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)+" is not a folder in the os")
             return
 
         #check if folder exists in dictionary and return if it does not
         if parent_dir+'/'+current_folder not in self.config:
-            print("ERROR: "+ parent_dir+'/'+current_folder + " doesn't exist in dictionary")
+            print_err("ERROR: "+ parent_dir+'/'+current_folder + " doesn't exist in dictionary")
             return
 
-        temp_dictionary = copy.deepcopy(self.config) #TODO: instead of doing this read the json again
+        temp_dictionary = copy.deepcopy(self.config)
         
         if list[0] == FOLDER:
             #search the list in the dictionary entry if it didn't find a folder with the same name then append it
@@ -281,32 +276,33 @@ class FolderOp:
                 temp_dictionary[parent_dir+'/'+current_folder].append([FOLDER, list[1]])
                 temp_dictionary[parent_dir+"/"+current_folder+"/"+list[1]] = []
             else:#TODO: check this condition first
-                print("ERROR: folder "+ list[1]+" already exists in "+parent_dir+'/'+current_folder)
+                print_err("ERROR: folder "+ list[1]+" already exists in "+parent_dir+'/'+current_folder)
                 return
         elif list[0] == EXTENSION:
             if list[1] in self.extensions:
-                print("ERROR: extension "+ list[1]+" already exists in folder: "+self.extensions[list[1]])
+                print_err("ERROR: extension "+ list[1]+" already exists in folder: "+self.extensions[list[1]])
                 return
             else:#TODO: else not necessary
                 temp_dictionary[parent_dir+"/"+current_folder].append([EXTENSION, list[1]])
                 self.extensions[list[1]] = os.path.join(self.path_to_root,os_dir)
         elif list[0] == REGULAR_EXPRESSION:
             if list[1] in self.regex:
-                print("ERROR: regex "+ list[1]+" already exists in folder: "+self.regex[list[1]])
+                print_err("ERROR: regex "+ list[1]+" already exists in folder: "+self.regex[list[1]])
                 return
             else:
                 temp_dictionary[parent_dir+"/"+current_folder].append([REGULAR_EXPRESSION, list[1]])
                 self.regex[list[1]] = os.path.join(self.path_to_root,os_dir)
         else:
-            print(f"ERROR: unknown type {list[0]}")
+            print_err("ERROR: unknown type"+ list[0])
             return
         try:
             if list[0] == FOLDER:
                 os.makedirs(os.path.join(os_dir,list[1]))
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
-        except:
-            print("ERROR: could not append changes reverting...")
+        except Exception as e:
+            print_err("ERROR: could not append changes reverting..." + e)
+    
     def append_rules_to_folder(self, parent_dir, current_folder, list_of_lists):
         for list in list_of_lists:
             self.append_to_folder(parent_dir, current_folder, list)
@@ -322,11 +318,11 @@ class FolderOp:
         os_dir = os.path.join(self.path_to_root,*parent_dir.split('/'),current_folder)
 
         if os.path.isdir(os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)) is not True:
-            print("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)+" is not a folder in the os")
+            print_err("ERROR: "+ os.path.join(self.path_to_root,*parent_dir.split('/'), current_folder)+" is not a folder in the os")
             return
 
         if parent_dir+'/'+current_folder not in self.config:
-            print("ERROR: "+ parent_dir+'/'+current_folder + " doesn't exist in dictionary")
+            print_err("ERROR: "+ parent_dir+'/'+current_folder + " doesn't exist in dictionary")
             return
         
         temp_dictionary = copy.deepcopy(self.config)
@@ -338,31 +334,31 @@ class FolderOp:
                 continue
             elif value[0] == EXTENSION:
                 if value[1] not in self.extensions:
-                    print(f"ERROR: extension {value[1]} doesnt exist in extension list")
+                    print_err(f"ERROR: extension {value[1]} doesnt exist in extension list")
                     return
                 else:
                     try:
                         temp_dictionary[parent_dir+"/"+current_folder].remove([EXTENSION, value[1]])
                     except ValueError:
-                        print(f"ERROR: could not remove extension {value[1]} (doesn't exist in folder)")
+                        print_err(f"ERROR: could not remove extension {value[1]} (doesn't exist in folder)")
                         return
                     del self.extensions[value[1]]
             elif value[0] == REGULAR_EXPRESSION:
                 if value[1] not in self.regex:
-                    print(f"ERROR: regex {value[1]} doesnt exist in regex list")
+                    print_err(f"ERROR: regex {value[1]} doesnt exist in regex list")
                     return
                 else:
                     try:
                         temp_dictionary[parent_dir+"/"+current_folder].remove([REGULAR_EXPRESSION, value[1]])
                     except ValueError:
-                        print(f"ERROR: could not remove regex {value[1]} (doesn't exist in folder)")
+                        print_err(f"ERROR: could not remove regex {value[1]} (doesn't exist in folder)")
                         return
                     del self.regex[value[1]]
         try:
             self.write_json(self.json_file, temp_dictionary)
             self.config = temp_dictionary
-        except:
-            print("ERROR write to json failed: could not remove changes, reverting...")
+        except Exception as e:
+            print_err("ERROR write to json failed: could not remove changes, reverting..." + e)
             self.dfs(self.root) # entensions and regex dictionaries might have changed but write failed (regenerate the dictionaries)
 
 

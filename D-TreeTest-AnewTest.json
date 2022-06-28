@@ -2,21 +2,11 @@
     "/AnewTest": [
         [
             "FOLDER",
-            "pdfs"
-        ],
-        [
-            "FOLDER",
             "Documents"
         ],
         [
             "FOLDER",
             "Files"
-        ]
-    ],
-    "/AnewTest/pdfs": [
-        [
-            "EXTENSION",
-            ".pdf"
         ]
     ],
     "/AnewTest/Documents": [
@@ -38,7 +28,7 @@
         ],
         [
             "FOLDER",
-            "MSIINDOCS"
+            "PDF"
         ]
     ],
     "/AnewTest/Documents/WORD": [
@@ -75,6 +65,10 @@
         [
             "FOLDER",
             "Images"
+        ],
+        [
+            "FOLDER",
+            "MSII"
         ]
     ],
     "/AnewTest/Files/Zips": [
@@ -89,10 +83,16 @@
             ".png"
         ]
     ],
-    "/AnewTest/Documents/MSIINDOCS": [
+    "/AnewTest/Files/MSII": [
         [
             "EXTENSION",
             ".msi"
+        ]
+    ],
+    "/AnewTest/Documents/PDF": [
+        [
+            "EXTENSION",
+            ".pdf"
         ]
     ]
 }

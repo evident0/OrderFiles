@@ -32,7 +32,7 @@ class CommandLineInterface:
         #check the bounds of the selection
         if int(sel) > len(a_list):
             print("invalid selection")
-            return
+            return ""
         self.folder_op = self.tree_op.select_tree(os.path.dirname(a_list[int(sel)]),os.path.basename(a_list[int(sel)]))
         print(f"the root: {self.folder_op.root}")
         return a_list[int(sel)]
