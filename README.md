@@ -49,6 +49,8 @@ Install Dependencies:
 
 # Getting Started
 
+(Please note that the script has not been thoroughly tested on Linux)
+
 1. Run the ``CommandLineInterface.py`` using python 3.10 and above is recommended
 2. ``help`` for a list of commands
 3. ``create <directory-path>`` to create a new tree Structure
