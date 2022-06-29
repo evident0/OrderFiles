@@ -21,7 +21,9 @@ class CommandLineInterface:
     def select_tree(self):
 
         a_list = self.tree_op.get_tree_list()
-        
+        if len(a_list) == 0:
+            print(Back.LIGHTWHITE_EX + Fore.BLACK+"no trees created, type help to see the create command" + Style.RESET_ALL)
+            return ""
         # a selection screen for the a_list
         number = 0
         for item in a_list:
