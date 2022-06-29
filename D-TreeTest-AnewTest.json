@@ -138,6 +138,17 @@
         [
             "REGULAR_EXPRESSION",
             "Designer\\."
+        ],
+        [
+            "FOLDER",
+            "morestuff"
         ]
-    ]
+    ],
+    "/AnewTest/substance/morestuff": [
+        [
+            "FOLDER",
+            "evenmorestuff"
+        ]
+    ],
+    "/AnewTest/substance/morestuff/evenmorestuff": []
 }

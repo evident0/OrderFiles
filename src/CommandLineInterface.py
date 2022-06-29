@@ -95,7 +95,7 @@ class CommandLineInterface:
     def tree_operations(self, command, arguments_size , arguments):
        
         if command == 'mk':
-            if arguments_size < 2:
+            if arguments_size != 2:
                 print('mk <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, create folder with list of rules')
                 return False
             else:
@@ -123,7 +123,7 @@ class CommandLineInterface:
                 #self.print_tree()
                 return True
         if command == 'rr':
-            if arguments_size < 2:
+            if arguments_size != 2:
                 print('rr <folder_name> <[...,[EXTENSION|REGULAR_EXPRESSION,<name>],...]>, remove rules from folder (use rm for FOLDERS)')
                 return False
             else:
@@ -151,7 +151,7 @@ class CommandLineInterface:
                 #self.print_tree()
                 return True
         elif command == 'rm':
-            if arguments_size < 1:
+            if arguments_size != 1:
                 print('rm <folder_name>, recursively send directory to trash')
                 return False
             else:
@@ -168,7 +168,7 @@ class CommandLineInterface:
                 #self.print_tree()
                 return True
         elif command == 'mv':
-            if arguments_size < 2:
+            if arguments_size != 2:
                 print('mv <folder_name> <new_folder_name>, move folder to new location')
                 return False
             else:
@@ -188,7 +188,7 @@ class CommandLineInterface:
                 #self.print_tree()
                 return True
         elif command == 'scanner':
-            if arguments_size < 1:
+            if arguments_size != 1:
                 print('scanner <folder_path> | add a folder to scan and move the files')
                 return False
             else:
@@ -196,7 +196,7 @@ class CommandLineInterface:
                 self.tree_op.add_scanable_folder(self.folder_op, arguments[0])
                 return True
         elif command == 'scanrm':
-            if arguments_size < 1:
+            if arguments_size != 1:
                 print('scanrm <folder_path> | remove a scanner from the currently selected tree')
                 return False
             else:
@@ -250,7 +250,7 @@ class CommandLineInterface:
             #exit the program
             exit()
         if command == 'create':
-            if len(arguments) < 1:
+            if len(arguments) != 1:
                 print('create <folder_path> create a tree structure with root </folder_name>')
                 return False
             else:
