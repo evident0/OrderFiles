@@ -72,7 +72,7 @@ class CommandLineInterface:
         print('scanner <os_path> - create a scanner for this folder. It will be used for ordering the files in the currently selected tree')
         print('scanrm <os_path> - remove a scanner from the currently selected tree')
         print('scaninf - display all the folders to be scanned when ordering')
-        print('order - order the files from the scanner folders')
+        print('order <N/A|-r> - order the files from the scanner folders, use -r for recursive scan')
         print('mk <folder_name> <[...,[FOLDER|EXTENSION|REGULAR_EXPRESSION,<name>],...]>, create folder with list of rules')
         print('rr <folder_name> <[...,[EXTENSION|REGULAR_EXPRESSION,<name>],...]>, remove rules from folder (use rm for FOLDER rules)')
         print('rm <folder_name>, recursively send directory to trash')
@@ -215,16 +215,28 @@ class CommandLineInterface:
             return True
 
         elif command == 'order':
-          
+            if len(arguments) > 1:
+                print('order <N/A|-r> | order the files in a folder, use -r for recursive scan')
+                return False
             #do the order command
-            print("ordering...")
-            #TODO return something if it succeeds
-            self.tree_op.order_files(self.folder_op)
-            print(Fore.GREEN+"Done"+Style.RESET_ALL)
-
+            if len(arguments) == 0:
+                print("ordering...")
+                #TODO return something if it succeeds
+                self.tree_op.order_files_no_recursion(self.folder_op)
+                print(Fore.GREEN+"Done"+Style.RESET_ALL)
+            elif arguments[0] == '-r':
+                print("ordering...")
+                #TODO return something if it succeeds
+                self.tree_op.order_files(self.folder_op)
+                print(Fore.GREEN+"Done"+Style.RESET_ALL)
+            else:
+                print('none valid argument for order, use use -r for recursive scan')
+                return False
             return True
+
         elif command == 'tree':
             self.print_tree()
+
         else:
             print(f'Invalid command: {command} type help')
             return False

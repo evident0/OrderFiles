@@ -7,6 +7,14 @@
         [
             "FOLDER",
             "Files"
+        ],
+        [
+            "FOLDER",
+            "Keys"
+        ],
+        [
+            "FOLDER",
+            "substance"
         ]
     ],
     "/AnewTest/Documents": [
@@ -118,6 +126,18 @@
         [
             "EXTENSION",
             ".txt"
+        ]
+    ],
+    "/AnewTest/Keys": [
+        [
+            "EXTENSION",
+            ".key"
+        ]
+    ],
+    "/AnewTest/substance": [
+        [
+            "REGULAR_EXPRESSION",
+            "Designer\\."
         ]
     ]
 }

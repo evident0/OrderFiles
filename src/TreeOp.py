@@ -116,6 +116,16 @@ class TreeOp:
         for folder_to_scan in self.tree_config[tree_config_entry_name]:
             scan.scan_directory(folder_to_scan)
         del scan
+    
+    def order_files_no_recursion(self, folder_op):
+        #TODO DO NOT CREATE AND DELETE A SCANNER
+        scan = Scan(folder_op)
+        path_to_root = folder_op.path_to_root
+        root = folder_op.root
+        tree_config_entry_name = os.path.join(path_to_root, root.replace("/", ""))
+        for folder_to_scan in self.tree_config[tree_config_entry_name]:
+            scan.scan_directory_no_recursion(folder_to_scan)
+        del scan
 
     #return a list with all the keys in the tree config
     def get_tree_list(self):
