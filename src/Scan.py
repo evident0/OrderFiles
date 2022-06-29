@@ -3,7 +3,7 @@ import re
 import shutil
 # DONE TODO add recursive option to scan folder
 # DONE TODO figure out if the tracked folder is the same as destination and if so, DONT COPY/RENAME 
-# (what it does now is rename the file incrementally name->name(1)->name(2)... if it already exists)
+# TODO add option to scan only one scanner folder and not all of them order <scanner-name|number>
 # TODO add multithreading so that main can have a progress bar
 
 class Scan:
@@ -59,11 +59,11 @@ class Scan:
                     continue
                 #if no regular expressions matched, move file based on it's extension
                 #check if file extension is in the list of extensions
-                #check if source and destination are the same and if so, don't move/copy , continue to next file
-                if root == self.extensions['.'+file.split('.')[-1]]:
-                    print("[EXTENSIONS] Found file with the same source and destination: "+file+" skipping...")
-                    continue
                 if "."+file.split('.')[-1] in self.extensions:
+                    #check if source and destination are the same and if so, don't move/copy , continue to next file
+                    if root == self.extensions['.'+file.split('.')[-1]]:
+                        print("[EXTENSIONS] Found file with the same source and destination: "+file+" skipping...")
+                        continue
                     #move file to the folder
                     new_file_name = self.handle_file_collision(self.extensions['.'+file.split('.')[-1]], file)
 
@@ -96,11 +96,13 @@ class Scan:
             if cont_loop:
                 continue
             #if no regular expressions matched, move file based on it's extension
-            #check if file extension is in the list of extensions
-            if directory == self.extensions['.'+file.split('.')[-1]]:
-                print("[EXTENSIONS] Found file with the same source and destination: "+file+" skipping...")
-                continue
+            
+           
             if "."+file.split('.')[-1] in self.extensions:
+                #check if file extension is in the list of extensions
+                if directory == self.extensions['.'+file.split('.')[-1]]:
+                    print("[EXTENSIONS] Found file with the same source and destination: "+file+" skipping...")
+                    continue
                 #move file to the folder
                 new_file_name = self.handle_file_collision(self.extensions['.'+file.split('.')[-1]], file)
                 #shutil allows to move files between different disk drives
