@@ -1,0 +1,2 @@
+colorama
+send2trash
