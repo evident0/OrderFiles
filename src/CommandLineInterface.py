@@ -182,8 +182,7 @@ class CommandLineInterface:
                 except IndexError:
                     print('<folder_name> is a relative path ex. /Root/Documents/PDF')
                     return False
-                #do the mv command
-                #print (f"ppath {parent_path},pname {folder_name}, nppath{new_parent_path}, npname{new_folder_name}")
+                #do the mv command            
                 #TODO return something if it succeeds
                 self.folder_op.move_folder(parent_path, folder_name, new_parent_path, new_folder_name)
                 #print("moving...")
@@ -222,12 +221,10 @@ class CommandLineInterface:
                 return False
             #do the order command
             if len(arguments) == 0:
-                print("ordering...")
                 #TODO return something if it succeeds
                 self.tree_op.order_files_no_recursion(self.folder_op)
                 print(Fore.GREEN+"Done"+Style.RESET_ALL)
             elif arguments[0] == '-r':
-                print("ordering...")
                 #TODO return something if it succeeds
                 self.tree_op.order_files(self.folder_op)
                 print(Fore.GREEN+"Done"+Style.RESET_ALL)
