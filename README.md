@@ -22,6 +22,11 @@
     rr <folder_name> <[...,[EXTENSION|REGULAR_EXPRESSION,<name>],...]>, remove rules from folder (use rm for FOLDER rules)
     rm <folder_name>, recursively send directory to trash
     mv <folder_name> <new_folder_name>, move folder to new location
+
+# Description
+
+Order organizes files in the file system based on extension type or python's regular expressions. Easily save and edit config files in readable javascript format,
+manage and edit specified tree directory structures to move the files into.
    
 ## Installing
 
