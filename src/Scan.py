@@ -36,6 +36,14 @@ class Scan:
         for root, dirs, files in os.walk(directory):
             filescount += len(files)
         return filescount
+    
+    def preprocessing_no_recursion(self,directory):
+        filescount = 0
+        #scan for files in directory not folders and increase count
+        for file in os.listdir(directory):
+            if os.path.isfile(os.path.join(directory,file)):
+                filescount += 1
+        return filescount
     # scan a directory and check the extension of each file
     # this is recursive
     def scan_directory(self,directory):
@@ -83,14 +91,13 @@ class Scan:
     # non recursive scan
     def scan_directory_no_recursion(self,directory):
         #get the number of files in the directory
-        filescount = self.preprocessing(directory)
-
+        filescount = self.preprocessing_no_recursion(directory)
+        #print(filescount)
         with tqdm(total=filescount) as pbar:
             for file in os.listdir(directory):
                 #check if source and destination are the same and if so, don't move/copy , continue to next file
                 #check if file is a directory and if so, skip it
                 if os.path.isdir(os.path.join(directory,file)):
-                    pbar.update(1)
                     continue
                 root = os.path.join(directory,file)
                 cont_loop = False
@@ -123,5 +130,7 @@ class Scan:
                     new_file_name = self.handle_file_collision(self.extensions['.'+file.split('.')[-1]], file)
                     #shutil allows to move files between different disk drives
                     shutil.move(os.path.join(directory,file), os.path.join(self.extensions['.'+file.split('.')[-1]], new_file_name))
+                #print pbar number of files
+
                 pbar.update(1)
                     
